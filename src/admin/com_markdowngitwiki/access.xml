@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<access component="com_markdowngitwiki">
+    <section name="component">
+        <action name="core.admin" title="Admin" description="Full access to all actions" />
+        <action name="core.manage" title="Manage" description="Access to manage actions" />
+        <action name="core.view" title="View" description="Access to view" />
+    </section>
+</access>
