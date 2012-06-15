@@ -1,0 +1,9 @@
+a.internal.redlink {
+    color: red;
+}
+
+a.external {
+    padding-left: 14px;
+    background-image: url(../img/external_link.png);
+    background-repeat: no-repeat;
+}
