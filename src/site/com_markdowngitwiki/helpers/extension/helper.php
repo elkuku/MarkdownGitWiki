@@ -280,4 +280,9 @@ class MgwExtensionHelper
 
         return JFile::exists($path);
     }
+
+    public static function drawMenu()
+    {
+
+    }
 }

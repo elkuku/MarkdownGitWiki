@@ -38,6 +38,9 @@ jimport('joomla.application.component.controller');
 //-- Get an instance of the controller with the prefix 'MarkdownGitWiki'
 $controller = JController::getInstance('MarkdownGitWiki');
 
+//@todo: some sub menu or other stuff....
+echo '<a class="btn" href="'.JRoute::_('&view=pages').'">Page list</a>';
+
 //-- Execute the 'task' from the Request
 $controller->execute(JFactory::getApplication()->input->get('task'));
 
