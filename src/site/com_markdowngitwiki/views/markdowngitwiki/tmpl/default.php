@@ -9,4 +9,6 @@
 
 JHtml::stylesheet('media/com_markdowngitwiki/site/css/markdowngitwiki.css');
 
+echo $this->loadTemplate('toolbar');
+
 echo $this->content->text;

@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') || die('=;)');
 /**
  * @package    MarkdownGitWiki
  * @subpackage Models
@@ -6,9 +6,6 @@
  * @author     Created on 14-Jun-2012
  * @license    GNU/GPL
  */
-
-//-- No direct access
-defined('_JEXEC') || die('=;)');
 
 jimport('joomla.application.component.model');
 
@@ -20,16 +17,7 @@ jimport('joomla.application.component.model');
  */
 class MarkdownGitWikiModelMarkdownGitWiki extends JModel
 {
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        // Additional work
-        $foo = 'Bar';
-
-        parent::__construct();
-    }
+    private $createButton = '';
 
     public function getContent()
     {
@@ -37,13 +25,22 @@ class MarkdownGitWikiModelMarkdownGitWiki extends JModel
 
         $page = JFactory::getApplication()->input->getVar('page', 'start');
 
+        //-- Dumbass check :P
         $page = str_replace('..', '', $page);
+
+        $createPage = JFactory::getApplication()->input->getInt('create') ? true : false;
+
+        $createLink = JRoute::_('&task=createPage&page='.$page);
+        //$createLinkStart = JRoute::_('&task=createPage&page='.$page.'/start');
+
+        $createButton = '<a class="btn btn-success" href="'.$createLink.'">'
+            .'<i class="icon-plus icon-white"></i>&nbsp;'
+            .'Create this page'
+            .'</a>';
 
         $fullPath = MGW_PATH_DATA.'/'.$page.'.md';
 
         $path = realpath($fullPath);
-
-//        JPath::clean()Folder::makeSafe()
 
         if($path && JFile::exists($path))
         {
@@ -53,45 +50,47 @@ class MarkdownGitWikiModelMarkdownGitWiki extends JModel
             return $content;
         }
 
-        $folder = realpath(dirname($fullPath));
+        $folder = realpath(JFile::stripExt($fullPath));
 
         if($folder && JFolder::exists($folder))
         {
-            $content->text = '{{pageindex|'.$page.'}}';
+            $html = array();
+
+            JHtml::script('media/com_markdowngitwiki/site/js/php_file_tree.js');
+            JHtml::stylesheet('media/com_markdowngitwiki/site/css/php_file_tree.css');
+
+            $html[] = '<h1>'.$page.'</h1>';
+
+            $html[] = MgwFileTree::drawTree($folder, JRoute::_('&view=&page='.$page.'/[link]'));
+
+//            $html[] = '{{pageindex|'.$page.'}}';
+
+            $this->createButton = $createButton;
+
+            $content->text = implode("\n", $html);
 
             return $content;
         }
 
         //-- Page not found :(
-        if(JFactory::getApplication()->input->getInt('create'))
+        if(false == $createPage)
         {
-            //@todo ACL
+            $this->createButton = $createButton;
 
-            $content->text = 'New Page';
-
-            if(false == JFile::write($fullPath, $content->text))
-                throw new Exception(sprintf('%s - Can not create the requested page.', __METHOD__));
-
-            JFactory::getApplication()->enqueueMessage('The page has been created');
-        }
-        else
-        {
-            if(1) //can create
-            {
-                $create = '<p><a class="btn btn-success" href="'.JRoute::_('&create=1').'">'
-                    .'<i class="icon-plus icon-white"></i>&nbsp;'
-                    .'Create the page'
-                    .'</a></p>';
-            }
-            else
-            {
-                $create = '<p>And you are not allowed to create pages</p>';
-            }
-
-            $content->text = sprintf('<p>'.'The page does not exist. %s'.'</p>', $create);
+            $content->text = '<p>'.'The page does not exist (yet).'.'</p>';
         }
 
         return $content;
+    }
+
+    public function getCreateButton()
+    {
+        //@todo: ACL
+
+        if(1) //can create
+        {
+            return $this->createButton;
+        }
     }
 }
 

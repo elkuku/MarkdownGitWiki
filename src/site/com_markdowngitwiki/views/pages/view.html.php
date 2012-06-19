@@ -20,6 +20,10 @@ class MarkdownGitWikiViewPages extends JView
      */
     public function display($tpl = null)
     {
+        $pathway = JFactory::getApplication()->getPathway();
+
+        $pathway->addItem('Page List');
+
         $foo = 'Do something here..';
 
         parent::display($tpl);

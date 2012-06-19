@@ -12,12 +12,12 @@ defined('_JEXEC') || die('=;)');
 
 //include __DIR__.'/helpers/makrdowngitwiki.php';
 
-$params = JComponentHelper::getParams('com_markdowngitwiki');
-
-$dataPath = $params->get('dataPath');
+$dataPath = JComponentHelper::getParams('com_markdowngitwiki')->get('dataPath');
 
 if('' === trim($dataPath))
     $dataPath = JPath::clean(JPATH_COMPONENT_ADMINISTRATOR.'/pages');
+
+$dataPath = realpath($dataPath);
 
 if(false == JFolder::exists($dataPath))
 {
@@ -37,9 +37,6 @@ jimport('joomla.application.component.controller');
 
 //-- Get an instance of the controller with the prefix 'MarkdownGitWiki'
 $controller = JController::getInstance('MarkdownGitWiki');
-
-//@todo: some sub menu or other stuff....
-echo '<a class="btn" href="'.JRoute::_('&view=pages').'">Page list</a>';
 
 //-- Execute the 'task' from the Request
 $controller->execute(JFactory::getApplication()->input->get('task'));

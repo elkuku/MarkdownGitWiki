@@ -15,7 +15,9 @@ class MgwTemplatePageindex extends MgwTemplate
 
         if(JFolder::exists($path))
         {
-            $html[] = '# '.$paramString;
+            //$html[] = '# '.$paramString;
+            $html[] = '<h3 class="mgwPageIndex">Page Index</h3>';
+            //$html[] = MGW_PATH_DATA.'/'.$paramString;
 
             $pages = JFolder::files($path, 'md');
 

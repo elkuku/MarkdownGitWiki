@@ -21,4 +21,34 @@ jimport('joomla.application.component.controller');
  */
 class MarkdownGitWikiController extends JController
 {
+    public function createPage()
+    {
+        //@todo ACL
+
+        $page = JFactory::getApplication()->input->getVar('page', 'start');
+
+        //-- Dumbass check :P
+        $page = str_replace('..', '', $page);
+
+        $c = array();
+
+        $c[] = '# '.$page;
+        $c[] = '';
+        $c[] = 'New Page...';
+
+        $content = implode("\n", $c);
+
+        $fullPath = MGW_PATH_DATA.'/'.$page.'.md';
+
+      //  $fullPath = realpath(dirname($p));
+     //   $fileName = JFile::getName($p);
+
+        if(false == JFile::write($fullPath, $content))
+            throw new Exception(sprintf('%s - Can not create the requested page.', __METHOD__));
+
+        JFactory::getApplication()->enqueueMessage('The page has been created');
+
+        $this->setRedirect(JRoute::_('&task=&page='.$page));
+
+    }
 }//class

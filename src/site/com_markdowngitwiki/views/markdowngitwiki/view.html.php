@@ -24,6 +24,8 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
 
     protected $page = '';
 
+    protected $createButton = '';
+
     /**
      * MarkdownGitWiki view display method.
      *
@@ -34,6 +36,7 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
     public function display($tpl = null)
     {
         $this->content = $this->get('content');
+        $this->createButton = $this->get('createButton');
 
         $this->page = JFactory::getApplication()->input->getVar('page', 'start');
 
@@ -78,8 +81,7 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
         $items = $pathway->getPathway();
 
         if($items
-            && ! $this->isDefaultView()
-        )
+            && ! $this->isDefaultView())
             array_pop($items);
 
         $parts = explode('/', $title);
@@ -91,8 +93,7 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
         foreach($parts as $part)
         {
             if(! $part
-                || 'start' == $part
-            )
+                || 'start' == $part)
                 continue;
 
             $combined .= ($combined) ? '/'.$part : $part;
@@ -101,7 +102,7 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
 
             $p->name = $part;
             $p->link = JRoute::_($baseLink.'&page='.$combined);
-            $p->class = MgwExtensionHelper::isLink($combined) ? '' : 'internal redlink';
+            //$p->class = MgwExtensionHelper::isLink($combined) ? '' : 'internal redlink';
 
             $items[] = $p;
         }
@@ -129,7 +130,7 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
 
         $items = $menus->getItems('component_id', $cId);
 
-        $Itemid = false;
+        $itemId = false;
 
         if($items)
         {
@@ -139,7 +140,7 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
                     && 'markdowngitwiki' == $item->query['view']
                 )
                 {
-                    $Itemid = $item->id;
+                    $itemId = $item->id;
                     //-- HEUREKA =;)
 
                     break;
@@ -147,10 +148,10 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
             }
         }
 
-        if(! $Itemid)
+        if(false == $itemId)
             return false;
 
-        return ($Itemid == $activeId);
+        return ($itemId == $activeId);
     }
 
 }
