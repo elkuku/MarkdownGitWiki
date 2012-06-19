@@ -801,7 +801,7 @@ class ElephantMarkdown
     public function _doAutoLinks_url_callback($matches)
     {
         $url = $this->encodeAttribute($matches[1]);
-        $link = "<a href=\"$url\">$url</a>";
+        $link = '<a href="'.$url.'" class="external">'.$url.'</a>';
         return $this->hashPart($link);
     }
 
