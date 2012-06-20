@@ -61,7 +61,31 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
 
         $this->setPathway();
 
+        $this->setupToolbar();
+
         parent::display($tpl);
+    }
+
+    private function setupToolbar()
+    {
+        if('' == $this->createButton)
+        {
+            MgwToolbarHelper::addButton(new MgwToolbarButton(array(
+                'onclick' => "alert('not yet...');",
+                'icon' => 'icon-pencil',
+                'text' => 'Edit'
+            )), 'actions');
+            MgwToolbarHelper::addButton(new MgwToolbarButton(array(
+                'onclick' => "alert('not yet...');",
+                'icon' => 'icon-trash',
+                'text' => 'Delete'
+            )), 'actions');
+        }
+        else
+        {
+            MgwToolbarHelper::addButton($this->createButton, 'actions');
+        }
+
     }
 
     /**

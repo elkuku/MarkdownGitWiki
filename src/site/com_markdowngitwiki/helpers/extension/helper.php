@@ -281,8 +281,14 @@ class MgwExtensionHelper
         return JFile::exists($path);
     }
 
-    public static function drawMenu()
+    public static function drawToolbar($class = 'pull-right')
     {
+        MgwToolbarHelper::addButton(new MgwToolbarButton(array(
+            'href' => JRoute::_('&view=pages'),
+            'icon' => 'icon-list-alt',
+            'text' => 'Page List'
+        )));
 
+        return MgwToolbarHelper::display($class);
     }
 }

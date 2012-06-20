@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <extension type="component" version="2.5">
   <name>MarkdownGitWiki</name>
   <creationDate>14-Jun-2012</creationDate>
@@ -9,15 +10,15 @@
   <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
   <version>1.0</version>
   <description>A simple hello world MVC component</description>
-  <scriptfile/>
+  <scriptfile />
   <install>
-    <sql/>
+    <sql />
   </install>
   <uninstall>
-    <sql/>
+    <sql />
   </uninstall>
   <update>
-    <schemas/>
+    <schemas />
   </update>
   <files folder="site">
     <folder>views</folder>

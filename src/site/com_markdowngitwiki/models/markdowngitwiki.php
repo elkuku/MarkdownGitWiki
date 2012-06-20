@@ -38,6 +38,13 @@ class MarkdownGitWikiModelMarkdownGitWiki extends JModel
             .'Create this page'
             .'</a>';
 
+        $createButton = new MgwToolbarButton(array(
+            'class' => 'btn-success',
+            'href' => $createLink,
+            'icon' => 'icon-plus icon white',
+            'text' => 'Create this page',
+        ));
+
         $fullPath = MGW_PATH_DATA.'/'.$page.'.md';
 
         $path = realpath($fullPath);
