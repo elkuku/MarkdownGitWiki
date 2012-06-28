@@ -1,0 +1,18 @@
+# This file contains the paths to your projects and their symbolic links
+
+# Every symlink goes on it's own line
+# path/from/basePath [alias/path]
+
+### MarkdownGitWiki
+
+# Component
+basePath=
+src/admin/com_markdowngitwiki administrator/components/com_markdowngitwiki
+src/site/com_markdowngitwiki components/com_markdowngitwiki
+src/media/com_markdowngitwiki media/com_markdowngitwiki
+
+# Plugins
+basePath=
+
+plugin/content/kisskontent plugins/content/kisskontent
+plugin/search/kisskontent plugins/search/kisskontent
