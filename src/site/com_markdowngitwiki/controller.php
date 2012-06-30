@@ -10,7 +10,6 @@
 //-- No direct access
 defined('_JEXEC') || die('=;)');
 
-
 jimport('joomla.application.component.controller');
 
 /**
@@ -40,15 +39,11 @@ class MarkdownGitWikiController extends JController
 
         $fullPath = MGW_PATH_DATA.'/'.$page.'.md';
 
-      //  $fullPath = realpath(dirname($p));
-     //   $fileName = JFile::getName($p);
-
         if(false == JFile::write($fullPath, $content))
             throw new Exception(sprintf('%s - Can not create the requested page.', __METHOD__));
 
         JFactory::getApplication()->enqueueMessage('The page has been created');
 
         $this->setRedirect(JRoute::_('&task=&page='.$page));
-
     }
-}//class
+}

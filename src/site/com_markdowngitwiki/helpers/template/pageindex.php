@@ -7,6 +7,15 @@
 
 class MgwTemplatePageindex extends MgwTemplate
 {
+    /**
+     * Process the template.
+     *
+     * @abstract
+     *
+     * @param string $paramString
+     *
+     * @return string
+     */
     public function process($paramString)
     {
         $path = MGW_PATH_DATA.'/'.$paramString;

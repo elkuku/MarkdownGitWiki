@@ -25,6 +25,9 @@ class MarkdownGitWikiModelMarkdownGitWiki extends JModel
 
         $page = JFactory::getApplication()->input->getVar('page', 'start');
 
+        if('' == $page)
+            $page = 'start';
+
         //-- Dumbass check :P
         $page = str_replace('..', '', $page);
 

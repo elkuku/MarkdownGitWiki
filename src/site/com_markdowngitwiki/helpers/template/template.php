@@ -10,5 +10,14 @@
  */
 abstract class MgwTemplate
 {
+    /**
+     * Process the template.
+     *
+     * @abstract
+     *
+     * @param string $paramString
+     *
+     * @return string
+     */
     abstract public function process($paramString);
 }

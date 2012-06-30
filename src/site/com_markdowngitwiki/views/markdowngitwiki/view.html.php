@@ -105,7 +105,8 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
         $items = $pathway->getPathway();
 
         if($items
-            && ! $this->isDefaultView())
+            && ! $this->isDefaultView()
+        )
             array_pop($items);
 
         $parts = explode('/', $title);
@@ -117,7 +118,8 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
         foreach($parts as $part)
         {
             if(! $part
-                || 'start' == $part)
+                || 'start' == $part
+            )
                 continue;
 
             $combined .= ($combined) ? '/'.$part : $part;

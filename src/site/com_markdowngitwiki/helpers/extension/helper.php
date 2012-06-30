@@ -108,11 +108,9 @@ class MgwExtensionHelper
 
     private static function processTemplates($text)
     {
-        $pattern = "@{{([a-z]+)\|([A-z\|]+)}}@";
+        $pattern = "@{{([a-z]+)\|?([A-z0-9\|\.\s]+)}}@";
 
         preg_match_all($pattern, $text, $matches);
-
-//        var_dump($matches);
 
         if(isset($matches[0][0]))
         {
@@ -121,7 +119,12 @@ class MgwExtensionHelper
                 $className = 'MgwTemplate'.ucfirst($matches[1][$i]);
 
                 if(false == class_exists($className))
-                    throw new Exception(__METHOD__.' - Invalid Template');
+                {
+                    $red = '<strong style="color: red;">'.$matches[0][$i].'</strong>';
+                    $text = str_replace($matches[0][$i], $red, $text);
+
+                    return $text;
+                }
 
                 /* @var MgwTemplate $template */
                 $template = new $className;
@@ -276,9 +279,17 @@ class MgwExtensionHelper
     {
         $page = JFactory::getApplication()->input->getVar('page');
 
+        if('start' == $page)
+            $page = '';
+
         $path = JPath::clean(MGW_PATH_DATA.(($page) ? '/'.$page : '').'/'.$link.'.md');
 
-        return JFile::exists($path);
+        if(true == JFile::exists($path))
+            return true;
+
+        $path = JPath::clean(MGW_PATH_DATA.(($page) ? '/'.$page : '').'/'.$link);
+
+        return JFolder::exists($path);
     }
 
     public static function drawToolbar($class = 'pull-right')

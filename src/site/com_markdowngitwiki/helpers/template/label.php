@@ -7,12 +7,20 @@
 
 class MgwTemplateLabel extends MgwTemplate
 {
-
+    /**
+     * Process the template.
+     *
+     * @abstract
+     *
+     * @param string $paramString
+     *
+     * @return string
+     */
     public function process($paramString)
     {
         $parts = explode('|', $paramString);
 
-        $class =(isset($parts[1])) ? ' label-'.$parts[1] : '';
+        $class = (isset($parts[1])) ? ' label-'.$parts[1] : '';
 
         return '<span class="label'.$class.'">'.$parts[0].'</span>';
         $path = MGW_PATH_DATA.'/'.$paramString;

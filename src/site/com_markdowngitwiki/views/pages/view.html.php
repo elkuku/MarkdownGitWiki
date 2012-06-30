@@ -1,6 +1,5 @@
 <?php
 
-
 jimport('joomla.application.component.view');
 
 /**
@@ -16,7 +15,7 @@ class MarkdownGitWikiViewPages extends JView
      *
      * @param string $tpl The name of the template file to parse;
      *
-     * @return void
+     * @return mixed|void
      */
     public function display($tpl = null)
     {
@@ -27,5 +26,5 @@ class MarkdownGitWikiViewPages extends JView
         $foo = 'Do something here..';
 
         parent::display($tpl);
-    }//function
-}//class
+    }
+}

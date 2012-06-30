@@ -21,28 +21,28 @@ defined('_JEXEC') || die('=;)');
  */
 function CHANGELOG()
 {
-/*
-_______________________________________________
-_______________________________________________
+    /*
+    _______________________________________________
+    _______________________________________________
 
-This is the changelog for KISSKontent
+    This is the changelog for KISSKontent
 
-Please be patient =;)
-_______________________________________________
-_______________________________________________
+    Please be patient =;)
+    _______________________________________________
+    _______________________________________________
 
-Legend:
+    Legend:
 
- * -> Security Fix
- # -> Bug Fix
- + -> Addition
- ^ -> Change
- - -> Removed
- ! -> Note
-______________________________________________
+     * -> Security Fix
+     # -> Bug Fix
+     + -> Addition
+     ^ -> Change
+     - -> Removed
+     ! -> Note
+    ______________________________________________
 
-16-Sep-2011 Nikolai Plath
- ! Startup
+    16-Sep-2011 Nikolai Plath
+     ! Startup
 
-*/
+    */
 }//--This is the END

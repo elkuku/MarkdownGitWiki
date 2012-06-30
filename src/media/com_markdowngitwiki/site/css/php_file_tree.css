@@ -6,35 +6,36 @@
 */
 
 .php-file-tree {
-	font-family: Georgia;
-	font-size: 12px;
-	letter-spacing: 1px;	line-height: 1.5;
+    font-family: Georgia;
+    font-size: 12px;
+    letter-spacing: 1px;
+    line-height: 1.5;
 }
 
-	.php-file-tree A {
-		color: #000000;
-		text-decoration: none;
-	}
+.php-file-tree A {
+    color: #000000;
+    text-decoration: none;
+}
 
-	.php-file-tree A:hover {
-		color: #666666;
-	}
+.php-file-tree A:hover {
+    color: #666666;
+}
 
-	.php-file-tree .open {
-		font-style: italic;
-	}
+.php-file-tree .open {
+    font-style: italic;
+}
 
-	.php-file-tree .closed {
-		font-style: normal;
-	}
+.php-file-tree .closed {
+    font-style: normal;
+}
 
-	.php-file-tree .pft-directory {
-		list-style-image: url(../img/php_file_tree/directory.png);
-	}
+.php-file-tree .pft-directory {
+    list-style-image: url(../img/php_file_tree/directory.png);
+}
 
-	/* Default file
-	.php-file-tree LI.pft-file { list-style-image: url(../img/php_file_tree/file.png); }
-	*/
+/* Default file
+    .php-file-tree LI.pft-file { list-style-image: url(../img/php_file_tree/file.png); }
+    */
 
 /* Additional file types
 	.php-file-tree LI.ext-3gp { list-style-image: url(../img/php_file_tree/film.png); }
@@ -99,5 +100,7 @@
 
 /* You can add millions of these... */
 
-.php-file-tree li.ext-md { list-style-image: url(../img/php_file_tree/html.png); }
+.php-file-tree li.ext-md {
+    list-style-image: url(../img/php_file_tree/html.png);
+}
 

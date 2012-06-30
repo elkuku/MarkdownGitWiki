@@ -13,7 +13,7 @@ class MgwToolbarHelper
 
     public static function addButton(MgwToolbarButton $button, $group = '')
     {
-        $group = $group ?: 'default';
+        $group = $group ? : 'default';
 
         if(false == isset(self::$buttonGroups[$group]))
             self::$buttonGroups[$group] = array();
@@ -33,7 +33,7 @@ class MgwToolbarHelper
 
             foreach($buttons as $button)
             {
-$html[] = $button->render();
+                $html[] = $button->render();
             }
 
             $html[] = '</div>';

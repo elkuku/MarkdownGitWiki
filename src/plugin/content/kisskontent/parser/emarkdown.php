@@ -3,7 +3,7 @@
 function Markdown($text)
 {
     static $parser;
-    if (!isset($parser))
+    if(! isset($parser))
         $parser = new ElephantMarkdown;
     return $parser->transform($text);
 }
@@ -21,7 +21,7 @@ class ElephantMarkdown
     const CONTAIN_SPAN_TAGS_REGEX = 'p|h[1-6]|li|dd|dt|td|th|legend|address';
     const CLEAN_TAGS_REGEX = 'script|math';
     const AUTO_CLOSE_TAGS_REGEX = 'hr|img';
-    const HEADER_SELFLINK_TEXT= "&larr;";
+    const HEADER_SELFLINK_TEXT = "&larr;";
     const NESTED_BRACKETS_REGEX = '(?>[^\[\]]+|\[(?>[^\[\]]+|\[(?>[^\[\]]+|\[(?>[^\[\]]+|\[(?>[^\[\]]+|\[(?>[^\[\]]+|\[\])*\])*\])*\])*\])*\])*';
     const NESTED_URL_PARENTHESIS_REGEX = '(?>[^()\s]+|\((?>[^()\s]+|\((?>[^()\s]+|\((?>[^()\s]+|\((?>\)))*(?>\)))*(?>\)))*(?>\)))*';
 
@@ -67,7 +67,7 @@ class ElephantMarkdown
         $text = preg_replace('/^[ ]+$/m', '', $text);
         $text = $this->runDocumentGamut($text);
         $this->cleanUp();
-        return $text . "\n";
+        return $text."\n";
     }
 
     public function runDocumentGamut($text)
@@ -85,7 +85,7 @@ class ElephantMarkdown
     {
         // Link defs are in the form: ^[id]: url "optional title"
         $text = preg_replace_callback('{
-							^[ ]{0,' . (static::TAB_WIDTH - 1) . '}\[(.+)\][ ]?:	# id = $1
+							^[ ]{0,'.(static::TAB_WIDTH - 1).'}\[(.+)\][ ]?:	# id = $1
 							  [ ]*
 							  \n?				# maybe *one* newline
 							  [ ]*
@@ -102,7 +102,7 @@ class ElephantMarkdown
 							)?	# title is optional
 							(?:\n+|\Z)
 			}xm',
-                array(&$this, '_stripLinkDefinitions_callback'), $text);
+            array(&$this, '_stripLinkDefinitions_callback'), $text);
         return $text;
     }
 
@@ -139,7 +139,7 @@ class ElephantMarkdown
 
         # Then hash the block.
         static $i = 0;
-        $key = "$boundary\x1A" . ++$i . $boundary;
+        $key = "$boundary\x1A".++$i.$boundary;
         $this->htmlHashes[$key] = $text;
         return $key; # String that will replace the tag.
     }
@@ -196,7 +196,7 @@ class ElephantMarkdown
 				[ ]*		# Tailing spaces
 				$			# End of line.
 			}mx',
-            "\n" . $this->hashBlock("<hr />") . "\n", $text);
+            "\n".$this->hashBlock("<hr />")."\n", $text);
     }
 
     public function runSpanGamut($text)
@@ -231,7 +231,7 @@ class ElephantMarkdown
         #
         # Turn Markdown link shortcuts into XHTML <a> tags.
         #
-        if ($this->inAnchor)
+        if($this->inAnchor)
             return $text;
         $this->inAnchor = true;
 
@@ -241,7 +241,7 @@ class ElephantMarkdown
         $text = preg_replace_callback('{
 			(					# wrap whole match in $1
 			  \[
-				(' . static::NESTED_BRACKETS_REGEX . ')	# link text = $2
+				('.static::NESTED_BRACKETS_REGEX.')	# link text = $2
 			  \]
 
 			  [ ]?				# one optional space
@@ -252,7 +252,7 @@ class ElephantMarkdown
 			  \]
 			)
 			}xs',
-                array(&$this, '_doAnchors_reference_callback'), $text);
+            array(&$this, '_doAnchors_reference_callback'), $text);
 
         #
         # Next, inline-style links: [link text](url "optional title")
@@ -260,14 +260,14 @@ class ElephantMarkdown
         $text = preg_replace_callback('{
 			(				# wrap whole match in $1
 			  \[
-				(' . static::NESTED_BRACKETS_REGEX . ')	# link text = $2
+				('.static::NESTED_BRACKETS_REGEX.')	# link text = $2
 			  \]
 			  \(			# literal paren
 				[ ]*
 				(?:
 					<(\S*)>	# href = $3
 				|
-					(' . static::NESTED_URL_PARENTHESIS_REGEX . ')	# href = $4
+					('.static::NESTED_URL_PARENTHESIS_REGEX.')	# href = $4
 				)
 				[ ]*
 				(			# $5
@@ -279,8 +279,7 @@ class ElephantMarkdown
 			  \)
 			)
 			}xs',
-                array(&$this, '_doAnchors_inline_callback'), $text);
-
+            array(&$this, '_doAnchors_inline_callback'), $text);
 
         $this->inAnchor = false;
         return $text;
@@ -297,7 +296,7 @@ class ElephantMarkdown
         $text = preg_replace_callback('{
 			(				# wrap whole match in $1
 			  !\[
-				(' . static::NESTED_BRACKETS_REGEX . ')		# alt text = $2
+				('.static::NESTED_BRACKETS_REGEX.')		# alt text = $2
 			  \]
 
 			  [ ]?				# one optional space
@@ -309,7 +308,7 @@ class ElephantMarkdown
 
 			)
 			}xs',
-                array(&$this, '_doImages_reference_callback'), $text);
+            array(&$this, '_doImages_reference_callback'), $text);
 
         #
         # Next, handle inline images:  ![alt text](url "optional title")
@@ -318,7 +317,7 @@ class ElephantMarkdown
         $text = preg_replace_callback('{
 			(				# wrap whole match in $1
 			  !\[
-				(' . static::NESTED_BRACKETS_REGEX . ')		# alt text = $2
+				('.static::NESTED_BRACKETS_REGEX.')		# alt text = $2
 			  \]
 			  \s?			# One optional whitespace character
 			  \(			# literal paren
@@ -326,7 +325,7 @@ class ElephantMarkdown
 				(?:
 					<(\S*)>	# src url = $3
 				|
-					(' . static::NESTED_URL_PARENTHESIS_REGEX . ')	# src url = $4
+					('.static::NESTED_URL_PARENTHESIS_REGEX.')	# src url = $4
 				)
 				[ ]*
 				(			# $5
@@ -338,7 +337,7 @@ class ElephantMarkdown
 			  \)
 			)
 			}xs',
-                array(&$this, '_doImages_inline_callback'), $text);
+            array(&$this, '_doImages_inline_callback'), $text);
 
         return $text;
     }
@@ -349,22 +348,27 @@ class ElephantMarkdown
         $alt_text = $matches[2];
         $link_id = strtolower($matches[3]);
 
-        if ($link_id == "") {
+        if($link_id == "")
+        {
             $link_id = strtolower($alt_text); # for shortcut links like ![this][].
         }
 
         $alt_text = $this->encodeAttribute($alt_text);
-        if (isset($this->urls[$link_id])) {
+        if(isset($this->urls[$link_id]))
+        {
             $url = $this->encodeAttribute($this->urls[$link_id]);
             $result = "<img src=\"$url\" alt=\"$alt_text\"";
-            if (isset($this->titles[$link_id])) {
+            if(isset($this->titles[$link_id]))
+            {
                 $title = $this->titles[$link_id];
                 $title = $this->encodeAttribute($title);
                 $result .= " title=\"$title\"";
             }
             $result .= " />";
             $result = $this->hashPart($result);
-        } else {
+        }
+        else
+        {
             # If there's no such link ID, leave intact:
             $result = $whole_match;
         }
@@ -382,7 +386,8 @@ class ElephantMarkdown
         $alt_text = $this->encodeAttribute($alt_text);
         $url = $this->encodeAttribute($url);
         $result = "<img src=\"$url\" alt=\"$alt_text\"";
-        if (isset($title)) {
+        if(isset($title))
+        {
             $title = $this->encodeAttribute($title);
             $result .= " title=\"$title\""; # $title already quoted
         }
@@ -405,13 +410,14 @@ class ElephantMarkdown
 
         $markers_relist = array($marker_ul_re, $marker_ol_re);
 
-        foreach ($markers_relist as $marker_re) {
+        foreach($markers_relist as $marker_re)
+        {
             # Re-usable pattern to match any entirel ul or ol list:
             $whole_list_re = '
 				(								# $1 = whole list
 				  (								# $2
-					[ ]{0,' . $less_than_tab . '}
-					(' . $marker_re . ')			# $3 = first list item marker
+					[ ]{0,'.$less_than_tab.'}
+					('.$marker_re.')			# $3 = first list item marker
 					[ ]+
 				  )
 				  (?s:.+?)
@@ -422,7 +428,7 @@ class ElephantMarkdown
 					  (?=\S)
 					  (?!						# Negative lookahead for another list item marker
 						[ ]*
-						' . $marker_re . '[ ]+
+						'.$marker_re.'[ ]+
 					  )
 				  )
 				)
@@ -430,18 +436,21 @@ class ElephantMarkdown
             # We use a different prefix before nested lists than top-level lists.
             # See extended comment in _ProcessListItems().
 
-            if ($this->listLevel) {
+            if($this->listLevel)
+            {
                 $text = preg_replace_callback('{
 						^
-						' . $whole_list_re . '
+						'.$whole_list_re.'
 					}mx',
-                        array(&$this, '_doLists_callback'), $text);
-            } else {
+                    array(&$this, '_doLists_callback'), $text);
+            }
+            else
+            {
                 $text = preg_replace_callback('{
 						(?:(?<=\n)\n|\A\n?) # Must eat the newline
-						' . $whole_list_re . '
+						'.$whole_list_re.'
 					}mx',
-                        array(&$this, '_doLists_callback'), $text);
+                    array(&$this, '_doLists_callback'), $text);
             }
         }
 
@@ -458,13 +467,13 @@ class ElephantMarkdown
         $list = $matches[1];
         $list_type = preg_match("/$marker_ul_re/", $matches[3]) ? "ul" : "ol";
 
-        $marker_any_re = ( $list_type == "ul" ? $marker_ul_re : $marker_ol_re );
+        $marker_any_re = ($list_type == "ul" ? $marker_ul_re : $marker_ol_re);
 
         $list .= "\n";
         $result = $this->processListItems($list, $marker_any_re);
 
-        $result = $this->hashBlock("<$list_type>\n" . $result . "</$list_type>");
-        return "\n" . $result . "\n\n";
+        $result = $this->hashBlock("<$list_type>\n".$result."</$list_type>");
+        return "\n".$result."\n\n";
     }
 
     public function processListItems($list_str, $marker_any_re)
@@ -494,7 +503,7 @@ class ElephantMarkdown
         # change the syntax rules such that sub-lists must start with a
         # starting cardinal number; e.g. "1." or "a.".
 
-        $this->listLevel++;
+        $this->listLevel ++;
 
         # trim trailing blank lines:
         $list_str = preg_replace("/\n{2,}\\z/", "\n", $list_str);
@@ -502,16 +511,16 @@ class ElephantMarkdown
         $list_str = preg_replace_callback('{
 			(\n)?							# leading line = $1
 			(^[ ]*)							# leading whitespace = $2
-			(' . $marker_any_re . '				# list marker and space = $3
+			('.$marker_any_re.'				# list marker and space = $3
 				(?:[ ]+|(?=\n))	# space only required if item is not empty
 			)
 			((?s:.*?))						# list item text   = $4
 			(?:(\n+(?=\n))|\n)				# tailing blank line = $5
-			(?= \n* (\z | \2 (' . $marker_any_re . ') (?:[ ]+|(?=\n))))
+			(?= \n* (\z | \2 ('.$marker_any_re.') (?:[ ]+|(?=\n))))
 			}xm',
-                array(&$this, '_processListItems_callback'), $list_str);
+            array(&$this, '_processListItems_callback'), $list_str);
 
-        $this->listLevel--;
+        $this->listLevel --;
         return $list_str;
     }
 
@@ -523,19 +532,23 @@ class ElephantMarkdown
         $marker_space = $matches[3];
         $tailing_blank_line = & $matches[5];
 
-        if ($leading_line || $tailing_blank_line ||
-            preg_match('/\n{2,}/', $item)) {
+        if($leading_line || $tailing_blank_line ||
+            preg_match('/\n{2,}/', $item)
+        )
+        {
             # Replace marker with the appropriate whitespace indentation
-            $item = $leading_space . str_repeat(' ', strlen($marker_space)) . $item;
-            $item = $this->runBlockGamut($this->outdent($item) . "\n");
-        } else {
+            $item = $leading_space.str_repeat(' ', strlen($marker_space)).$item;
+            $item = $this->runBlockGamut($this->outdent($item)."\n");
+        }
+        else
+        {
             # Recursion for sub-lists:
             $item = $this->doLists($this->outdent($item));
             $item = preg_replace('/\n+$/', '', $item);
             $item = $this->runSpanGamut($item);
         }
 
-        return "<li>" . $item . "</li>\n";
+        return "<li>".$item."</li>\n";
     }
 
     public function doCodeBlocks($text)
@@ -547,13 +560,13 @@ class ElephantMarkdown
 				(?:\n\n|\A\n?)
 				(	            # $1 = the code block -- one or more lines, starting with a space/tab
 				  (?>
-					[ ]{' . static::TAB_WIDTH . '}  # Lines must start with a tab or a tab-width of spaces
+					[ ]{'.static::TAB_WIDTH.'}  # Lines must start with a tab or a tab-width of spaces
 					.*\n+
 				  )+
 				)
-				((?=^[ ]{0,' . static::TAB_WIDTH . '}\S)|\Z)	# Lookahead for non-space at line-start, or end of doc
+				((?=^[ ]{0,'.static::TAB_WIDTH.'}\S)|\Z)	# Lookahead for non-space at line-start, or end of doc
 			}xm',
-                array(&$this, '_doCodeBlocks_callback'), $text);
+            array(&$this, '_doCodeBlocks_callback'), $text);
 
         return $text;
     }
@@ -569,7 +582,7 @@ class ElephantMarkdown
         $codeblock = preg_replace('/\A\n+|\n+\z/', '', $codeblock);
 
         $codeblock = "<pre><code>$codeblock\n</code></pre>";
-        return "\n\n" . $this->hashBlock($codeblock) . "\n\n";
+        return "\n\n".$this->hashBlock($codeblock)."\n\n";
     }
 
     public function makeCodeSpan($code)
@@ -589,7 +602,8 @@ class ElephantMarkdown
         $strong = '';
         $tree_char_em = false;
 
-        while (1) {
+        while(1)
+        {
             #
             # Get prepared regular expression for seraching emphasis tokens
             # in current context.
@@ -605,10 +619,12 @@ class ElephantMarkdown
             $token = & $parts[1];
             $text = & $parts[2];
 
-            if (empty($token)) {
+            if(empty($token))
+            {
                 # Reached end of text span: empty stack without emitting.
                 # any more emphasis.
-                while ($token_stack[0]) {
+                while($token_stack[0])
+                {
                     $text_stack[1] .= array_shift($token_stack);
                     $text_stack[0] .= array_shift($text_stack);
                 }
@@ -616,9 +632,11 @@ class ElephantMarkdown
             }
 
             $token_len = strlen($token);
-            if ($tree_char_em) {
+            if($tree_char_em)
+            {
                 # Reached closing marker while inside a three-char emphasis.
-                if ($token_len == 3) {
+                if($token_len == 3)
+                {
                     # Three-char closing marker, close em and strong.
                     array_shift($token_stack);
                     $span = array_shift($text_stack);
@@ -627,7 +645,9 @@ class ElephantMarkdown
                     $text_stack[0] .= $this->hashPart($span);
                     $em = '';
                     $strong = '';
-                } else {
+                }
+                else
+                {
                     # Other closing marker: close one em or strong and
                     # change current token state to match the other
                     $token_stack[0] = str_repeat($token{0}, 3 - $token_len);
@@ -639,11 +659,15 @@ class ElephantMarkdown
                     $$tag = ''; # $$tag stands for $em or $strong
                 }
                 $tree_char_em = false;
-            } else if ($token_len == 3) {
-                if ($em) {
+            }
+            else if($token_len == 3)
+            {
+                if($em)
+                {
                     # Reached closing marker for both em and strong.
                     # Closing strong marker:
-                    for ($i = 0; $i < 2; ++$i) {
+                    for($i = 0; $i < 2; ++$i)
+                    {
                         $shifted_token = array_shift($token_stack);
                         $tag = strlen($shifted_token) == 2 ? "strong" : "em";
                         $span = array_shift($text_stack);
@@ -652,7 +676,9 @@ class ElephantMarkdown
                         $text_stack[0] .= $this->hashPart($span);
                         $$tag = ''; # $$tag stands for $em or $strong
                     }
-                } else {
+                }
+                else
+                {
                     # Reached opening three-char emphasis marker. Push on token
                     # stack; will be handled by the special condition above.
                     $em = $token{0};
@@ -661,10 +687,14 @@ class ElephantMarkdown
                     array_unshift($text_stack, '');
                     $tree_char_em = true;
                 }
-            } else if ($token_len == 2) {
-                if ($strong) {
+            }
+            else if($token_len == 2)
+            {
+                if($strong)
+                {
                     # Unwind any dangling emphasis marker:
-                    if (strlen($token_stack[0]) == 1) {
+                    if(strlen($token_stack[0]) == 1)
+                    {
                         $text_stack[1] .= array_shift($token_stack);
                         $text_stack[0] .= array_shift($text_stack);
                     }
@@ -675,15 +705,21 @@ class ElephantMarkdown
                     $span = "<strong>$span</strong>";
                     $text_stack[0] .= $this->hashPart($span);
                     $strong = '';
-                } else {
+                }
+                else
+                {
                     array_unshift($token_stack, $token);
                     array_unshift($text_stack, '');
                     $strong = $token;
                 }
-            } else {
+            }
+            else
+            {
                 # Here $token_len == 1
-                if ($em) {
-                    if (strlen($token_stack[0]) == 1) {
+                if($em)
+                {
+                    if(strlen($token_stack[0]) == 1)
+                    {
                         # Closing emphasis marker:
                         array_shift($token_stack);
                         $span = array_shift($text_stack);
@@ -691,10 +727,14 @@ class ElephantMarkdown
                         $span = "<em>$span</em>";
                         $text_stack[0] .= $this->hashPart($span);
                         $em = '';
-                    } else {
+                    }
+                    else
+                    {
                         $text_stack[0] .= $token;
                     }
-                } else {
+                }
+                else
+                {
                     array_unshift($token_stack, $token);
                     array_unshift($text_stack, '');
                     $em = $token;
@@ -716,7 +756,7 @@ class ElephantMarkdown
 				)+
 			  )
 			/xm',
-                array(&$this, '_doBlockQuotes_callback'), $text);
+            array(&$this, '_doBlockQuotes_callback'), $text);
 
         return $text;
     }
@@ -726,15 +766,15 @@ class ElephantMarkdown
         $bq = $matches[1];
         # trim one level of quoting - trim whitespace-only lines
         $bq = preg_replace('/^[ ]*>[ ]?|^[ ]+$/m', '', $bq);
-        $bq = $this->runBlockGamut($bq);  # recurse
+        $bq = $this->runBlockGamut($bq); # recurse
 
         $bq = preg_replace('/^/m', "  ", $bq);
         # These leading spaces cause problem with <pre> content,
         # so we need to fix that:
         $bq = preg_replace_callback('{(\s*<pre>.+?</pre>)}sx',
-                array(&$this, '_DoBlockQuotes_callback2'), $bq);
+            array(&$this, '_DoBlockQuotes_callback2'), $bq);
 
-        return "\n" . $this->hashBlock("<blockquote>\n$bq\n</blockquote>") . "\n\n";
+        return "\n".$this->hashBlock("<blockquote>\n$bq\n</blockquote>")."\n\n";
     }
 
     public function _doBlockQuotes_callback2($matches)
@@ -762,13 +802,16 @@ class ElephantMarkdown
         # be encoded. Valid character entities are left alone unless the
         # no-entities mode is set.
         #
-        if (static::NO_ENTITIES) {
+        if(static::NO_ENTITIES)
+        {
             $text = str_replace('&', '&amp;', $text);
-        } else {
+        }
+        else
+        {
             # Ampersand-encoding based entirely on Nat Irons's Amputator
             # MT plugin: <http://bumppo.net/projects/amputator/>
             $text = preg_replace('/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/', '&amp;',
-                    $text);
+                $text);
             ;
         }
         # Encode remaining <'s
@@ -780,7 +823,7 @@ class ElephantMarkdown
     public function doAutoLinks($text)
     {
         $text = preg_replace_callback('{<((https?|ftp|dict):[^\'">\s]+)>}i',
-                array(&$this, '_doAutoLinks_url_callback'), $text);
+            array(&$this, '_doAutoLinks_url_callback'), $text);
 
         # Email addresses: <address@domain.foo>
         $text = preg_replace_callback('{
@@ -793,7 +836,7 @@ class ElephantMarkdown
 			)
 			>
 			}xi',
-                array(&$this, '_doAutoLinks_email_callback'), $text);
+            array(&$this, '_doAutoLinks_email_callback'), $text);
 
         return $text;
     }
@@ -829,23 +872,25 @@ class ElephantMarkdown
         #	Based by a filter by Matthew Wickline, posted to BBEdit-Talk.
         #   With some optimizations by Milian Wolff.
         #
-        $addr = "mailto:" . $addr;
+        $addr = "mailto:".$addr;
         $chars = preg_split('/(?<!^)(?!$)/', $addr);
-        $seed = (int) abs(crc32($addr) / strlen($addr)); # Deterministic seed.
+        $seed = (int)abs(crc32($addr) / strlen($addr)); # Deterministic seed.
 
-        foreach ($chars as $key => $char) {
+        foreach($chars as $key => $char)
+        {
             $ord = ord($char);
             # Ignore non-ascii chars.
-            if ($ord < 128) {
+            if($ord < 128)
+            {
                 $r = ($seed * (1 + $key)) % 100; # Pseudo-random function.
                 # roughly 10% raw, 45% hex, 45% dec
                 # '@' *must* be encoded. I insist.
-                if ($r > 90 && $char != '@') /* do nothing */
+                if($r > 90 && $char != '@') /* do nothing */
                     ;
-                else if ($r < 45)
-                    $chars[$key] = '&#x' . dechex($ord) . ';';
+                else if($r < 45)
+                    $chars[$key] = '&#x'.dechex($ord).';';
                 else
-                    $chars[$key] = '&#' . $ord . ';';
+                    $chars[$key] = '&#'.$ord.';';
             }
         }
 
@@ -866,11 +911,11 @@ class ElephantMarkdown
 
         $span_re = '{
 				(
-					\\\\' . static::ESCAPE_CHARS . '
+					\\\\'.static::ESCAPE_CHARS.'
 				|
 					(?<![`\\\\])
 					`+						# code span marker
-			' . ( static::NO_MARKUP ? '' : '
+			'.(static::NO_MARKUP ? '' : '
 				|
 					<!--    .*?     -->		# comment
 				|
@@ -882,11 +927,12 @@ class ElephantMarkdown
 						(?>[^"\'>]+|"[^"]*"|\'[^\']*\')*
 					)?
 					>
-			') . '
+			').'
 				)
 				}xs';
 
-        while (1) {
+        while(1)
+        {
             #
             # Each loop iteration seach for either the next tag, the next
             # openning code span marker, or the next escaped character.
@@ -895,15 +941,19 @@ class ElephantMarkdown
             $parts = preg_split($span_re, $str, 2, PREG_SPLIT_DELIM_CAPTURE);
 
             # Create token from text preceding tag.
-            if ($parts[0] != "") {
+            if($parts[0] != "")
+            {
                 $output .= $parts[0];
             }
 
             # Check if we reach the end.
-            if (isset($parts[1])) {
+            if(isset($parts[1]))
+            {
                 $output .= $this->handleSpanToken($parts[1], $parts[2]);
                 $str = $parts[2];
-            } else {
+            }
+            else
+            {
                 break;
             }
         }
@@ -917,13 +967,16 @@ class ElephantMarkdown
         # Handle $token provided by parseSpan by determining its nature and
         # returning the corresponding value that should replace it.
         #
-        switch ($token{0}) {
+        switch($token{0})
+        {
             case "\\":
-                return $this->hashPart("&#" . ord($token{1}) . ";");
+                return $this->hashPart("&#".ord($token{1}).";");
             case "`":
                 # Search for end marker in remaining text.
-                if (preg_match('/^(.*?[^`])' . preg_quote($token) . '(?!`)(.*)$/sm',
-                        $str, $matches)) {
+                if(preg_match('/^(.*?[^`])'.preg_quote($token).'(?!`)(.*)$/sm',
+                    $str, $matches)
+                )
+                {
                     $str = $matches[2];
                     $codespan = $this->makeCodeSpan($matches[1]);
                     return $this->hashPart($codespan);
@@ -939,7 +992,7 @@ class ElephantMarkdown
         #
         # Remove one level of line-leading tabs or spaces
         #
-        return preg_replace('/^(\t|[ ]{1,' . static::TAB_WIDTH . '})/m', '',
+        return preg_replace('/^(\t|[ ]{1,'.static::TAB_WIDTH.'})/m', '',
             $text);
     }
 
@@ -953,7 +1006,7 @@ class ElephantMarkdown
         # appropriate number of space between each blocks.
 
         $text = preg_replace_callback('/^.*\t.*$/m',
-                array(&$this, '_detab_callback'), $text);
+            array(&$this, '_detab_callback'), $text);
 
         return $text;
     }
@@ -967,11 +1020,12 @@ class ElephantMarkdown
         # Add each blocks to the line.
         $line = $blocks[0];
         unset($blocks[0]); # Do not add first block twice.
-        foreach ($blocks as $block) {
+        foreach($blocks as $block)
+        {
             # Calculate amount of space, insert spaces, insert block.
             $amount = static::TAB_WIDTH -
                 mb_strlen($line, 'UTF-8') % static::TAB_WIDTH;
-            $line .= str_repeat(" ", $amount) . $block;
+            $line .= str_repeat(" ", $amount).$block;
         }
         return $line;
     }
@@ -1029,7 +1083,7 @@ class ElephantMarkdown
         #
         # Call the HTML-in-Markdown hasher.
         #
-        list($text, ) = $this->_hashHTMLBlocks_inMarkdown($text);
+        list($text,) = $this->_hashHTMLBlocks_inMarkdown($text);
 
         return $text;
     }
@@ -1061,7 +1115,7 @@ class ElephantMarkdown
         #
         # Returns an array of that form: ( processed text , remaining text )
         #
-        if ($text === '')
+        if($text === '')
             return array('', '');
 
         # Regex to check for the presense of newlines around a block tag.
@@ -1079,10 +1133,10 @@ class ElephantMarkdown
 				(					# $2: Capture hole tag.
 					</?					# Any opening or closing tag.
 						(?>				# Tag name.
-							' . static::BLOCK_TAGS_REGEX . '			|
-							' . static::CONTEXT_BLOCK_TAGS_REGEX . '	|
-							' . static::CLEAN_TAGS_REGEX . '        	|
-							(?!\s)' . $enclosing_tag_re . '
+							'.static::BLOCK_TAGS_REGEX.'			|
+							'.static::CONTEXT_BLOCK_TAGS_REGEX.'	|
+							'.static::CLEAN_TAGS_REGEX.'        	|
+							(?!\s)'.$enclosing_tag_re.'
 						)
 						(?:
 							(?=[\s"\'/a-zA-Z0-9])	# Allowed characters after tag name.
@@ -1102,30 +1156,30 @@ class ElephantMarkdown
 				|
 					# Code span marker
 					`+
-				' . (!$span ? ' # If not in span.
+				'.(! $span ? ' # If not in span.
 				|
 					# Indented code block
 					(?> ^[ ]*\n? | \n[ ]*\n )
-					[ ]{' . ($indent + 4) . '}[^\n]* \n
+					[ ]{'.($indent + 4).'}[^\n]* \n
 					(?>
-						(?: [ ]{' . ($indent + 4) . '}[^\n]* | [ ]* ) \n
+						(?: [ ]{'.($indent + 4).'}[^\n]* | [ ]* ) \n
 					)*
 				|
 					# Fenced code block marker
 					(?> ^ | \n )
-					[ ]{' . ($indent) . '}~~~+[ ]*\n
-				' : '' ) . ' # End (if not is span).
+					[ ]{'.($indent).'}~~~+[ ]*\n
+				' : '').' # End (if not is span).
 				)
 			}xs';
 
-
-        $depth = 0;  # Current depth inside the tag tree.
+        $depth = 0; # Current depth inside the tag tree.
         $parsed = ""; # Parsed text that will be returned.
         #
         # Loop through every tag until we find the closing tag of the parent
         # or loop until reaching the end of text if no parent tag specified.
         #
-        do {
+        do
+        {
             #
             # Split the text using the first $tag_match pattern found.
             # Text before  pattern will be first in the array, text after
@@ -1133,19 +1187,21 @@ class ElephantMarkdown
             # by the pattern.
             #
             $parts = preg_split($block_tag_re, $text, 2,
-                    PREG_SPLIT_DELIM_CAPTURE);
+                PREG_SPLIT_DELIM_CAPTURE);
 
             # If in Markdown span mode, add a empty-string span-level hash
             # after each newline to prevent triggering any block element.
-            if ($span) {
+            if($span)
+            {
                 $void = $this->hashPart("", ':');
                 $newline = "$void\n";
-                $parts[0] = $void . str_replace("\n", $newline, $parts[0]) . $void;
+                $parts[0] = $void.str_replace("\n", $newline, $parts[0]).$void;
             }
 
             $parsed .= $parts[0]; # Text before current tag.
             # If end of $text has been reached. Stop loop.
-            if (count($parts) < 3) {
+            if(count($parts) < 3)
+            {
                 $text = "";
                 break;
             }
@@ -1156,15 +1212,20 @@ class ElephantMarkdown
             #
             # Check for: Code span marker
             #
-            if ($tag{0} == "`") {
+            if($tag{0} == "`")
+            {
                 # Find corresponding end marker.
                 $tag_re = preg_quote($tag);
-                if (preg_match('{^(?>.+?|\n(?!\n))*?(?<!`)' . $tag_re . '(?!`)}',
-                        $text, $matches)) {
+                if(preg_match('{^(?>.+?|\n(?!\n))*?(?<!`)'.$tag_re.'(?!`)}',
+                    $text, $matches)
+                )
+                {
                     # End marker found: pass text unchanged until marker.
-                    $parsed .= $tag . $matches[0];
+                    $parsed .= $tag.$matches[0];
                     $text = substr($text, strlen($matches[0]));
-                } else {
+                }
+                else
+                {
                     # Unmatched marker: just skip it.
                     $parsed .= $tag;
                 }
@@ -1172,20 +1233,28 @@ class ElephantMarkdown
             #
             # Check for: Indented code block or fenced code block marker.
             #
-            else if ($tag{0} == "\n" || $tag{0} == "~") {
-                if ($tag{1} == "\n" || $tag{1} == " ") {
+            else if($tag{0} == "\n" || $tag{0} == "~")
+            {
+                if($tag{1} == "\n" || $tag{1} == " ")
+                {
                     # Indented code block: pass it unchanged, will be handled
                     # later.
                     $parsed .= $tag;
-                } else {
+                }
+                else
+                {
                     # Fenced code block marker: find matching end marker.
                     $tag_re = preg_quote(trim($tag));
-                    if (preg_match('{^(?>.*\n)+?' . $tag_re . ' *\n}', $text,
-                            $matches)) {
+                    if(preg_match('{^(?>.*\n)+?'.$tag_re.' *\n}', $text,
+                        $matches)
+                    )
+                    {
                         # End marker found: pass text unchanged until marker.
-                        $parsed .= $tag . $matches[0];
+                        $parsed .= $tag.$matches[0];
                         $text = substr($text, strlen($matches[0]));
-                    } else {
+                    }
+                    else
+                    {
                         # No end marker: just skip it.
                         $parsed .= $tag;
                     }
@@ -1196,15 +1265,16 @@ class ElephantMarkdown
             #            Opening Context Block tag (like ins and del)
             #               used as a block tag (tag is alone on it's line).
             #
-            else if (preg_match('{^<(?:' . static::BLOCK_TAGS_REGEX . ')\b}', $tag) ||
-                ( preg_match('{^<(?:' . static::CONTEXT_BLOCK_TAGS_REGEX . ')\b}',
+            else if(preg_match('{^<(?:'.static::BLOCK_TAGS_REGEX.')\b}', $tag) ||
+                (preg_match('{^<(?:'.static::CONTEXT_BLOCK_TAGS_REGEX.')\b}',
                     $tag) &&
-                preg_match($newline_before_re, $parsed) &&
-                preg_match($newline_after_re, $text) )
-            ) {
+                    preg_match($newline_before_re, $parsed) &&
+                    preg_match($newline_after_re, $text))
+            )
+            {
                 # Need to parse tag and following text using the HTML parser.
                 list($block_text, $text) =
-                    $this->_hashHTMLBlocks_inHTML($tag . $text, "hashBlock",
+                    $this->_hashHTMLBlocks_inHTML($tag.$text, "hashBlock",
                         true);
 
                 # Make sure it stays outside of any paragraph by adding newlines.
@@ -1214,12 +1284,14 @@ class ElephantMarkdown
             # Check for: Clean tag (like script, math)
             #            HTML Comments, processing instructions.
             #
-            else if (preg_match('{^<(?:' . static::CLEAN_TAGS_REGEX . ')\b}', $tag) ||
-                $tag{1} == '!' || $tag{1} == '?') {
+            else if(preg_match('{^<(?:'.static::CLEAN_TAGS_REGEX.')\b}', $tag) ||
+                $tag{1} == '!' || $tag{1} == '?'
+            )
+            {
                 # Need to parse tag and following text using the HTML parser.
                 # (don't check for markdown attribute)
                 list($block_text, $text) =
-                    $this->_hashHTMLBlocks_inHTML($tag . $text, "hashClean",
+                    $this->_hashHTMLBlocks_inHTML($tag.$text, "hashClean",
                         false);
 
                 $parsed .= $block_text;
@@ -1227,31 +1299,36 @@ class ElephantMarkdown
             #
             # Check for: Tag with same name as enclosing tag.
             #
-            else if ($enclosing_tag_re !== '' &&
+            else if($enclosing_tag_re !== '' &&
                 # Same name as enclosing tag.
-                preg_match('{^</?(?:' . $enclosing_tag_re . ')\b}', $tag)) {
+                preg_match('{^</?(?:'.$enclosing_tag_re.')\b}', $tag)
+            )
+            {
                 #
                 # Increase/decrease nested tag count.
                 #
-                if ($tag{1} == '/')
-                    $depth--;
-                else if ($tag{strlen($tag) - 2} != '/')
-                    $depth++;
+                if($tag{1} == '/')
+                    $depth --;
+                else if($tag{strlen($tag) - 2} != '/')
+                    $depth ++;
 
-                if ($depth < 0) {
+                if($depth < 0)
+                {
                     #
                     # Going out of parent element. Clean up and break so we
                     # return to the calling function.
                     #
-                    $text = $tag . $text;
+                    $text = $tag.$text;
                     break;
                 }
 
                 $parsed .= $tag;
-            } else {
+            }
+            else
+            {
                 $parsed .= $tag;
             }
-        } while ($depth >= 0);
+        } while($depth >= 0);
 
         return array($parsed, $text);
     }
@@ -1268,7 +1345,7 @@ class ElephantMarkdown
         #
         # Returns an array of that form: ( processed text , remaining text )
         #
-        if ($text === '')
+        if($text === '')
             return array('', '');
 
         # Regex to match `markdown` attribute inside of a tag.
@@ -1310,7 +1387,7 @@ class ElephantMarkdown
 				)
 			}xs';
 
-        $original_text = $text;  # Save original text in case of faliure.
+        $original_text = $text; # Save original text in case of faliure.
 
         $depth = 0; # Current depth inside the tag tree.
         $block_text = ""; # Temporary text holder for current text.
@@ -1319,13 +1396,14 @@ class ElephantMarkdown
         # Get the name of the starting tag.
         # (This pattern makes $base_tag_name_re safe without quoting.)
         #
-        if (preg_match('/^<([\w:$]*)\b/', $text, $matches))
+        if(preg_match('/^<([\w:$]*)\b/', $text, $matches))
             $base_tag_name_re = $matches[1];
 
         #
         # Loop through every tag until we find the corresponding closing tag.
         #
-        do {
+        do
+        {
             #
             # Split the text using the first $tag_match pattern found.
             # Text before  pattern will be first in the array, text after
@@ -1334,7 +1412,8 @@ class ElephantMarkdown
             #
             $parts = preg_split($tag_re, $text, 2, PREG_SPLIT_DELIM_CAPTURE);
 
-            if (count($parts) < 3) {
+            if(count($parts) < 3)
+            {
                 #
                 # End of $text reached with unbalenced tag(s).
                 # In that case, we return original text unchanged and pass the
@@ -1351,42 +1430,53 @@ class ElephantMarkdown
             # Check for: Auto-close tag (like <hr/>)
             #			 Comments and Processing Instructions.
             #
-            if (preg_match('{^</?(?:' . static::AUTO_CLOSE_TAGS_REGEX . ')\b}', $tag) ||
-                $tag{1} == '!' || $tag{1} == '?') {
+            if(preg_match('{^</?(?:'.static::AUTO_CLOSE_TAGS_REGEX.')\b}', $tag) ||
+                $tag{1} == '!' || $tag{1} == '?'
+            )
+            {
                 # Just add the tag to the block as if it was text.
                 $block_text .= $tag;
-            } else {
+            }
+            else
+            {
                 #
                 # Increase/decrease nested tag count. Only do so if
                 # the tag's name match base tag's.
                 #
-                if (preg_match('{^</?' . $base_tag_name_re . '\b}', $tag)) {
-                    if ($tag{1} == '/')
-                        $depth--;
-                    else if ($tag{strlen($tag) - 2} != '/')
-                        $depth++;
+                if(preg_match('{^</?'.$base_tag_name_re.'\b}', $tag))
+                {
+                    if($tag{1} == '/')
+                        $depth --;
+                    else if($tag{strlen($tag) - 2} != '/')
+                        $depth ++;
                 }
 
                 #
                 # Check for `markdown="1"` attribute and handle it.
                 #
-                if ($md_attr &&
+                if($md_attr &&
                     preg_match($markdown_attr_re, $tag, $attr_m) &&
-                    preg_match('/^1|block|span$/', $attr_m[2] . $attr_m[3])) {
+                    preg_match('/^1|block|span$/', $attr_m[2].$attr_m[3])
+                )
+                {
                     # Remove `markdown` attribute from opening tag.
                     $tag = preg_replace($markdown_attr_re, '', $tag);
 
                     # Check if text inside this tag must be parsed in span mode.
-                    $this->mode = $attr_m[2] . $attr_m[3];
+                    $this->mode = $attr_m[2].$attr_m[3];
                     $span_mode = $this->mode == 'span' || $this->mode != 'block' &&
-                        preg_match('{^<(?:' . static::CONTAIN_SPAN_TAGS_REGEX . ')\b}',
+                        preg_match('{^<(?:'.static::CONTAIN_SPAN_TAGS_REGEX.')\b}',
                             $tag);
 
                     # Calculate indent before tag.
-                    if (preg_match('/(?:^|\n)( *?)(?! ).*?$/', $block_text,
-                            $matches)) {
+                    if(preg_match('/(?:^|\n)( *?)(?! ).*?$/', $block_text,
+                        $matches)
+                    )
+                    {
                         $indent = mb_strlen($matches[1], 'UTF-8');
-                    } else {
+                    }
+                    else
+                    {
                         $indent = 0;
                     }
 
@@ -1402,16 +1492,17 @@ class ElephantMarkdown
                     # Parse the content using the HTML-in-Markdown parser.
                     list ($block_text, $text)
                         = $this->_hashHTMLBlocks_inMarkdown($text, $indent,
-                            $tag_name_re, $span_mode);
+                        $tag_name_re, $span_mode);
 
                     # Outdent markdown text.
-                    if ($indent > 0) {
+                    if($indent > 0)
+                    {
                         $block_text = preg_replace("/^[ ]{1,$indent}/m", "",
-                                $block_text);
+                            $block_text);
                     }
 
                     # Append tag content to parsed text.
-                    if (!$span_mode)
+                    if(! $span_mode)
                         $parsed .= "\n\n$block_text\n\n";
                     else
                         $parsed .= "$block_text";
@@ -1422,7 +1513,7 @@ class ElephantMarkdown
                 else
                     $block_text .= $tag;
             }
-        } while ($depth > 0);
+        } while($depth > 0);
 
         #
         # Hash last block text that wasn't processed inside the loop.
@@ -1452,7 +1543,8 @@ class ElephantMarkdown
         $url = $this->encodeAttribute($url);
 
         $result = "<a class=\"external\" href=\"$url\"";
-        if (isset($title)) {
+        if(isset($title))
+        {
             $title = $this->encodeAttribute($title);
             $result .= " title=\"$title\"";
         }
@@ -1470,7 +1562,8 @@ class ElephantMarkdown
         $link_id = & $matches[3];
         $result = '';
 
-        if ($link_id == "") {
+        if($link_id == "")
+        {
             # for shortcut links like [this][] or [this].
             $link_id = $link_text;
         }
@@ -1479,12 +1572,14 @@ class ElephantMarkdown
         $link_id = strtolower($link_id);
         $link_id = preg_replace('{[ ]?\n}', ' ', $link_id);
 
-        if (isset($this->urls[$link_id])) {
+        if(isset($this->urls[$link_id]))
+        {
             $url = $this->urls[$link_id];
             $url = $this->encodeAttribute($url);
 
             $result = "<a class=\"external\" href=\"$url\"";
-            if (isset($this->titles[$link_id])) {
+            if(isset($this->titles[$link_id]))
+            {
                 $title = $this->titles[$link_id];
                 $title = $this->encodeAttribute($title);
                 $result .= " title=\"$title\"";
@@ -1493,7 +1588,9 @@ class ElephantMarkdown
             $link_text = $this->runSpanGamut($link_text);
             $result .= ">$link_text</a>";
             $result = $this->hashPart($result);
-        } else {
+        }
+        else
+        {
             $result = $whole_match;
         }
         return $result;
@@ -1512,12 +1609,12 @@ class ElephantMarkdown
         #	  --------
         #
         $text = preg_replace_callback(
-                '{
+            '{
 				(^.+?)								# $1: Header text
 				(?:[ ]+\{\#([-_:a-zA-Z0-9]+)\})?	# $2: Id attribute
 				[ ]*\n(=+|-+)[ ]*\n+				# $3: Header footer
 			}mx',
-                array(&$this, '_doHeaders_callback_setext'), $text);
+            array(&$this, '_doHeaders_callback_setext'), $text);
 
         # atx-style headers:
         #	# Header 1        {#header1}
@@ -1536,21 +1633,21 @@ class ElephantMarkdown
 				[ ]*
 				\n+
 			}xm',
-                array(&$this, '_doHeaders_callback_atx'), $text);
+            array(&$this, '_doHeaders_callback_atx'), $text);
 
         return $text;
     }
 
     public function _doHeaders_attr($attr)
     {
-        if (empty($attr))
+        if(empty($attr))
             return "";
         return " id=\"$attr\"";
     }
 
     public function _doHeaders_callback_setext($matches)
     {
-        if ($matches[3] == '-' && preg_match('{^- }', $matches[1]))
+        if($matches[3] == '-' && preg_match('{^- }', $matches[1]))
             return $matches[0];
         $level = $matches[3]{0} == '=' ? 1 : 2;
         $attr = $this->_doHeaders_attr($id = & $matches[2]);
@@ -1558,7 +1655,7 @@ class ElephantMarkdown
         $body = $this->_doHeaders_selflink($id, $body);
 
         $block = "<h$level$attr>$body</h$level>";
-        return "\n" . $this->hashBlock($block) . "\n\n";
+        return "\n".$this->hashBlock($block)."\n\n";
     }
 
     public function _doHeaders_callback_atx($matches)
@@ -1569,15 +1666,16 @@ class ElephantMarkdown
         $body = $this->_doHeaders_selflink($id, $body);
 
         $block = "<h$level$attr>$body</h$level>";
-        return "\n" . $this->hashBlock($block) . "\n\n";
+        return "\n".$this->hashBlock($block)."\n\n";
     }
 
     public function _doHeaders_selflink($id, $body)
     {
-        if (!empty($id)) {
-            $link = '<a href="#' . $id . '"';
+        if(! empty($id))
+        {
+            $link = '<a href="#'.$id.'"';
 
-            $link .= '>' . static::HEADER_SELFLINK_TEXT . '</a>';
+            $link .= '>'.static::HEADER_SELFLINK_TEXT.'</a>';
 
             $body .= $link;
         }
@@ -1602,11 +1700,11 @@ class ElephantMarkdown
         $text = preg_replace_callback('
 			{
 				^							# Start of a line
-				[ ]{0,' . $less_than_tab . '}	# Allowed whitespace.
+				[ ]{0,'.$less_than_tab.'}	# Allowed whitespace.
 				[|]							# Optional leading pipe (present)
 				(.+) \n						# $1: Header row (at least one pipe)
 
-				[ ]{0,' . $less_than_tab . '}	# Allowed whitespace.
+				[ ]{0,'.$less_than_tab.'}	# Allowed whitespace.
 				[|] ([ ]*[-:]+[-| :]*) \n	# $2: Header underline
 
 				(							# $3: Cells
@@ -1617,7 +1715,7 @@ class ElephantMarkdown
 				)
 				(?=\n|\Z)					# Stop at final double newline.
 			}xm',
-                array(&$this, '_doTable_leadingPipe_callback'), $text);
+            array(&$this, '_doTable_leadingPipe_callback'), $text);
 
         #
         # Find tables without leading pipe.
@@ -1630,10 +1728,10 @@ class ElephantMarkdown
         $text = preg_replace_callback('
 			{
 				^							# Start of a line
-				[ ]{0,' . $less_than_tab . '}	# Allowed whitespace.
+				[ ]{0,'.$less_than_tab.'}	# Allowed whitespace.
 				(\S.*[|].*) \n				# $1: Header row (at least one pipe)
 
-				[ ]{0,' . $less_than_tab . '}	# Allowed whitespace.
+				[ ]{0,'.$less_than_tab.'}	# Allowed whitespace.
 				([-:]+[ ]*[|][-| :]*) \n	# $2: Header underline
 
 				(							# $3: Cells
@@ -1643,7 +1741,7 @@ class ElephantMarkdown
 				)
 				(?=\n|\Z)					# Stop at final double newline.
 			}xm',
-                array(&$this, '_DoTable_callback'), $text);
+            array(&$this, '_DoTable_callback'), $text);
 
         return $text;
     }
@@ -1673,12 +1771,13 @@ class ElephantMarkdown
 
         # Reading alignement from header underline.
         $separators = preg_split('/ *[|] */', $underline);
-        foreach ($separators as $n => $s) {
-            if (preg_match('/^ *-+: *$/', $s))
+        foreach($separators as $n => $s)
+        {
+            if(preg_match('/^ *-+: *$/', $s))
                 $attr[$n] = ' align="right"';
-            else if (preg_match('/^ *:-+: *$/', $s))
+            else if(preg_match('/^ *:-+: *$/', $s))
                 $attr[$n] = ' align="center"';
-            else if (preg_match('/^ *:-+ *$/', $s))
+            else if(preg_match('/^ *:-+ *$/', $s))
                 $attr[$n] = ' align="left"';
             else
                 $attr[$n] = '';
@@ -1694,8 +1793,8 @@ class ElephantMarkdown
         $text = "<table>\n";
         $text .= "<thead>\n";
         $text .= "<tr>\n";
-        foreach ($headers as $n => $header)
-            $text .= "  <th$attr[$n]>" . $this->runSpanGamut(trim($header)) . "</th>\n";
+        foreach($headers as $n => $header)
+            $text .= "  <th$attr[$n]>".$this->runSpanGamut(trim($header))."</th>\n";
         $text .= "</tr>\n";
         $text .= "</thead>\n";
 
@@ -1703,7 +1802,8 @@ class ElephantMarkdown
         $rows = explode("\n", trim($content, "\n"));
 
         $text .= "<tbody>\n";
-        foreach ($rows as $row) {
+        foreach($rows as $row)
+        {
             # Parsing span elements, including code spans, character escapes,
             # and inline HTML tags, so that pipes inside those gets ignored.
             $row = $this->parseSpan($row);
@@ -1713,14 +1813,14 @@ class ElephantMarkdown
             $row_cells = array_pad($row_cells, $col_count, '');
 
             $text .= "<tr>\n";
-            foreach ($row_cells as $n => $cell)
-                $text .= "  <td$attr[$n]>" . $this->runSpanGamut(trim($cell)) . "</td>\n";
+            foreach($row_cells as $n => $cell)
+                $text .= "  <td$attr[$n]>".$this->runSpanGamut(trim($cell))."</td>\n";
             $text .= "</tr>\n";
         }
         $text .= "</tbody>\n";
         $text .= "</table>";
 
-        return $this->hashBlock($text) . "\n";
+        return $this->hashBlock($text)."\n";
     }
 
     public function doDefLists($text)
@@ -1734,10 +1834,10 @@ class ElephantMarkdown
         $whole_list_re = '(?>
 			(								# $1 = whole list
 			  (								# $2
-				[ ]{0,' . $less_than_tab . '}
+				[ ]{0,'.$less_than_tab.'}
 				((?>.*\S.*\n)+)				# $3 = defined term
 				\n?
-				[ ]{0,' . $less_than_tab . '}:[ ]+ # colon starting definition
+				[ ]{0,'.$less_than_tab.'}:[ ]+ # colon starting definition
 			  )
 			  (?s:.+?)
 			  (								# $4
@@ -1746,13 +1846,13 @@ class ElephantMarkdown
 				  \n{2,}
 				  (?=\S)
 				  (?!						# Negative lookahead for another term
-					[ ]{0,' . $less_than_tab . '}
+					[ ]{0,'.$less_than_tab.'}
 					(?: \S.*\n )+?			# defined term
 					\n?
-					[ ]{0,' . $less_than_tab . '}:[ ]+ # colon starting definition
+					[ ]{0,'.$less_than_tab.'}:[ ]+ # colon starting definition
 				  )
 				  (?!						# Negative lookahead for another definition
-					[ ]{0,' . $less_than_tab . '}:[ ]+ # colon starting definition
+					[ ]{0,'.$less_than_tab.'}:[ ]+ # colon starting definition
 				  )
 			  )
 			)
@@ -1760,9 +1860,9 @@ class ElephantMarkdown
 
         $text = preg_replace_callback('{
 				(?>\A\n?|(?<=\n\n))
-				' . $whole_list_re . '
+				'.$whole_list_re.'
 			}mx',
-                array(&$this, '_doDefLists_callback'), $text);
+            array(&$this, '_doDefLists_callback'), $text);
 
         return $text;
     }
@@ -1775,8 +1875,8 @@ class ElephantMarkdown
         # Turn double returns into triple returns, so that we can make a
         # paragraph for the last item in a list, if necessary:
         $result = trim($this->processDefListItems($list));
-        $result = "<dl>\n" . $result . "\n</dl>";
-        return $this->hashBlock($result) . "\n\n";
+        $result = "<dl>\n".$result."\n</dl>";
+        return $this->hashBlock($result)."\n\n";
     }
 
     public function processDefListItems($list_str)
@@ -1794,7 +1894,7 @@ class ElephantMarkdown
         $list_str = preg_replace_callback('{
 			(?>\A\n?|\n\n+)					# leading line
 			(								# definition terms = $1
-				[ ]{0,' . $less_than_tab . '}	# leading whitespace
+				[ ]{0,'.$less_than_tab.'}	# leading whitespace
 				(?![:][ ]|[ ])				# negative lookahead for a definition
 											#   mark (colon) or more whitespace.
 				(?> \S.* \n)+?				# actual term (not whitespace).
@@ -1802,24 +1902,24 @@ class ElephantMarkdown
 			(?=\n?[ ]{0,3}:[ ])				# lookahead for following line feed
 											#   with a definition mark.
 			}xm',
-                array(&$this, '_processDefListItems_callback_dt'), $list_str);
+            array(&$this, '_processDefListItems_callback_dt'), $list_str);
 
         # Process actual definitions.
         $list_str = preg_replace_callback('{
 			\n(\n+)?						# leading line = $1
 			(								# marker space = $2
-				[ ]{0,' . $less_than_tab . '}	# whitespace before colon
+				[ ]{0,'.$less_than_tab.'}	# whitespace before colon
 				[:][ ]+						# definition mark (colon)
 			)
 			((?s:.+?))						# definition text = $3
 			(?= \n+ 						# stop at next definition mark,
 				(?:							# next term or end of text
-					[ ]{0,' . $less_than_tab . '} [:][ ]	|
+					[ ]{0,'.$less_than_tab.'} [:][ ]	|
 					<dt | \z
 				)
 			)
 			}xm',
-                array(&$this, '_processDefListItems_callback_dd'), $list_str);
+            array(&$this, '_processDefListItems_callback_dd'), $list_str);
 
         return $list_str;
     }
@@ -1831,21 +1931,24 @@ class ElephantMarkdown
         $text = '';
         $id = array();
 
-        foreach ($terms as $term) {
+        foreach($terms as $term)
+        {
             $id = '';
-            if (preg_match($anchor_regexp, $term, $id) > 0) {
+            if(preg_match($anchor_regexp, $term, $id) > 0)
+            {
                 $term = preg_replace($anchor_regexp, '', $term);
-                $id = ' id="' . trim($id[1]) . '"';
+                $id = ' id="'.trim($id[1]).'"';
             }
 
-            if (count($id) === 0) {
+            if(count($id) === 0)
+            {
                 $id = '';
             }
 
             $term = $this->runSpanGamut(trim($term));
-            $text .= "\n<dt$id>" . $term . "</dt>";
+            $text .= "\n<dt$id>".$term."</dt>";
         }
-        return $text . "\n";
+        return $text."\n";
     }
 
     public function _processDefListItems_callback_dd($matches)
@@ -1854,17 +1957,20 @@ class ElephantMarkdown
         $marker_space = $matches[2];
         $def = $matches[3];
 
-        if ($leading_line || preg_match('/\n{2,}/', $def)) {
+        if($leading_line || preg_match('/\n{2,}/', $def))
+        {
             # Replace marker with the appropriate whitespace indentation
-            $def = str_repeat(' ', strlen($marker_space)) . $def;
-            $def = $this->runBlockGamut($this->outdent($def . "\n\n"));
-            $def = "\n" . $def . "\n";
-        } else {
+            $def = str_repeat(' ', strlen($marker_space)).$def;
+            $def = $this->runBlockGamut($this->outdent($def."\n\n"));
+            $def = "\n".$def."\n";
+        }
+        else
+        {
             $def = rtrim($def);
             $def = $this->runSpanGamut($this->outdent($def));
         }
 
-        return "\n<dd>" . $def . "</dd>\n";
+        return "\n<dd>".$def."</dd>\n";
     }
 
     public function doFencedCodeBlocks($text)
@@ -1897,7 +2003,7 @@ class ElephantMarkdown
 				# Closing marker.
 				\1 [ ]* \n
 			}xm',
-                array(&$this, '_doFencedCodeBlocks_callback'), $text);
+            array(&$this, '_doFencedCodeBlocks_callback'), $text);
 
         return $text;
     }
@@ -1907,9 +2013,9 @@ class ElephantMarkdown
         $codeblock = $matches[2];
         $codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
         $codeblock = preg_replace_callback('/^\n+/',
-                array(&$this, '_doFencedCodeBlocks_newlines'), $codeblock);
+            array(&$this, '_doFencedCodeBlocks_newlines'), $codeblock);
         $codeblock = "<pre><code>$codeblock</code></pre>";
-        return "\n\n" . $this->hashBlock($codeblock) . "\n\n";
+        return "\n\n".$this->hashBlock($codeblock)."\n\n";
     }
 
     public function _doFencedCodeBlocks_newlines($matches)
@@ -1926,19 +2032,21 @@ class ElephantMarkdown
         # Strip leading and trailing lines:
         $text = preg_replace('/\A\n+|\n+\z/', '', $text);
 
-        $grafs = preg_split('/\n{2,}/', $text, -1, PREG_SPLIT_NO_EMPTY);
+        $grafs = preg_split('/\n{2,}/', $text, - 1, PREG_SPLIT_NO_EMPTY);
 
         #
         # Wrap <p> tags and unhashify HTML blocks
         #
-        foreach ($grafs as $key => $value) {
+        foreach($grafs as $key => $value)
+        {
             $value = trim($this->runSpanGamut($value));
 
             # Check if this should be enclosed in a paragraph.
             # Clean tag hashes & block tag hashes are left alone.
-            $is_p = !preg_match('/^B\x1A[0-9]+B|^C\x1A[0-9]+C$/', $value);
+            $is_p = ! preg_match('/^B\x1A[0-9]+B|^C\x1A[0-9]+C$/', $value);
 
-            if ($is_p) {
+            if($is_p)
+            {
                 $value = "<p>$value</p>";
             }
             $grafs[$key] = $value;
@@ -1965,7 +2073,7 @@ class ElephantMarkdown
 
         # Link defs are in the form: [^id]: url "optional title"
         $text = preg_replace_callback('{
-			^[ ]{0,' . $less_than_tab . '}\[\^(.+?)\][ ]?:	# note_id = $1
+			^[ ]{0,'.$less_than_tab.'}\[\^(.+?)\][ ]?:	# note_id = $1
 			  [ ]*
 			  \n?					# maybe *one* newline
 			(						# text = $2 (no blank lines allowed)
@@ -1979,7 +2087,7 @@ class ElephantMarkdown
 				)*
 			)
 			}xm',
-                array(&$this, '_stripFootnotes_callback'), $text);
+            array(&$this, '_stripFootnotes_callback'), $text);
         return $text;
     }
 
@@ -1996,7 +2104,8 @@ class ElephantMarkdown
         # Replace footnote references in $text [^id] with a special text-token
         # which will be replaced by the actual footnote marker in appendFootnotes.
         #
-        if (!$this->inAnchor) {
+        if(! $this->inAnchor)
+        {
             $text = preg_replace('{\[\^(.+?)\]}', "F\x1Afn:\\1\x1A:", $text);
         }
         return $text;
@@ -2008,9 +2117,10 @@ class ElephantMarkdown
         # Append footnote list to text.
         #
         $text = preg_replace_callback('{F\x1Afn:(.*?)\x1A:}',
-                array(&$this, '_appendFootnotes_callback'), $text);
+            array(&$this, '_appendFootnotes_callback'), $text);
 
-        if (!empty($this->orderedFootnotes)) {
+        if(! empty($this->orderedFootnotes))
+        {
             $text .= "\n\n";
             $text .= "<div class=\"footnotes\">\n";
             $text .= "<hr />\n";
@@ -2019,7 +2129,8 @@ class ElephantMarkdown
             $attr = " rev=\"footnote\"";
             $num = 0;
 
-            while (!empty($this->orderedFootnotes)) {
+            while(! empty($this->orderedFootnotes))
+            {
                 $footnote = reset($this->orderedFootnotes);
                 $note_id = key($this->orderedFootnotes);
                 unset($this->orderedFootnotes[$note_id]);
@@ -2027,21 +2138,24 @@ class ElephantMarkdown
                 $footnote .= "\n"; # Need to append newline before parsing.
                 $footnote = $this->runBlockGamut("$footnote\n");
                 $footnote = preg_replace_callback('{F\x1Afn:(.*?)\x1A:}',
-                        array(&$this, '_appendFootnotes_callback'), $footnote);
+                    array(&$this, '_appendFootnotes_callback'), $footnote);
 
                 $attr = str_replace("%%", ++$num, $attr);
                 $note_id = $this->encodeAttribute($note_id);
 
                 # Add backlink to last paragraph; create new paragraph if needed.
                 $backlink = "<a href=\"#fnref:$note_id\"$attr>&#8617;</a>";
-                if (preg_match('{</p>$}', $footnote)) {
-                    $footnote = substr($footnote, 0, -4) . "&#160;$backlink</p>";
-                } else {
+                if(preg_match('{</p>$}', $footnote))
+                {
+                    $footnote = substr($footnote, 0, - 4)."&#160;$backlink</p>";
+                }
+                else
+                {
                     $footnote .= "\n\n<p>$backlink</p>";
                 }
 
                 $text .= "<li id=\"fn:$note_id\">\n";
-                $text .= $footnote . "\n";
+                $text .= $footnote."\n";
                 $text .= "</li>\n\n";
             }
 
@@ -2057,23 +2171,24 @@ class ElephantMarkdown
 
         # Create footnote marker only if it has a corresponding footnote *and*
         # the footnote hasn't been used by another marker.
-        if (isset($this->footnotes[$node_id])) {
+        if(isset($this->footnotes[$node_id]))
+        {
             # Transfert footnote content to the ordered list.
             $this->orderedFootnotes[$node_id] = $this->footnotes[$node_id];
             unset($this->footnotes[$node_id]);
 
-            $num = $this->footnoteCounter++;
+            $num = $this->footnoteCounter ++;
             $attr = " rel=\"footnote\"";
             $attr = str_replace("%%", $num, $attr);
             $node_id = $this->encodeAttribute($node_id);
 
             return
-            '<sup id="fnref:'.$node_id.'">'
-			.'<a href="'.$GLOBALS['_SERVER']['REQUEST_URI'].'#fn:'.$node_id.'"'.$attr.'>'.$num.'</a>'
-            .'</sup>';
+                '<sup id="fnref:'.$node_id.'">'
+                .'<a href="'.$GLOBALS['_SERVER']['REQUEST_URI'].'#fn:'.$node_id.'"'.$attr.'>'.$num.'</a>'
+                .'</sup>';
         }
 
-        return "[^" . $matches[1] . "]";
+        return "[^".$matches[1]."]";
     }
 
     ### Abbreviations ###
@@ -2087,10 +2202,10 @@ class ElephantMarkdown
 
         # Link defs are in the form: [id]*: url "optional title"
         $text = preg_replace_callback('{
-			^[ ]{0,' . $less_than_tab . '}\*\[(.+?)\][ ]?:	# abbr_id = $1
+			^[ ]{0,'.$less_than_tab.'}\*\[(.+?)\][ ]?:	# abbr_id = $1
 			(.*)					# text = $2 (no blank lines allowed)
 			}xm',
-                array(&$this, '_stripAbbreviations_callback'), $text);
+            array(&$this, '_stripAbbreviations_callback'), $text);
         return $text;
     }
 
@@ -2098,7 +2213,7 @@ class ElephantMarkdown
     {
         $abbr_word = $matches[1];
         $abbr_desc = $matches[2];
-        if ($this->abbrWordsRegex)
+        if($this->abbrWordsRegex)
             $this->abbrWordsRegex .= '|';
         $this->abbrWordsRegex .= preg_quote($abbr_word);
         $this->abbrDescriptions[$abbr_word] = trim($abbr_desc);
@@ -2110,14 +2225,15 @@ class ElephantMarkdown
         #
         # Find defined abbreviations in text and wrap them in <abbr> elements.
         #
-        if ($this->abbrWordsRegex) {
+        if($this->abbrWordsRegex)
+        {
             // cannot use the /x modifier because abbr_word_re may
             // contain significant spaces:
-            $text = preg_replace_callback('{' .
-                    '(?<![\w\x1A])' .
-                    '(?:' . $this->abbrWordsRegex . ')' .
-                    '(?![\w\x1A])' .
-                    '}', array(&$this, '_doAbbreviations_callback'), $text);
+            $text = preg_replace_callback('{'.
+                '(?<![\w\x1A])'.
+                '(?:'.$this->abbrWordsRegex.')'.
+                '(?![\w\x1A])'.
+                '}', array(&$this, '_doAbbreviations_callback'), $text);
         }
         return $text;
     }
@@ -2125,15 +2241,21 @@ class ElephantMarkdown
     public function _doAbbreviations_callback($matches)
     {
         $abbr = $matches[0];
-        if (isset($this->abbrDescriptions[$abbr])) {
+        if(isset($this->abbrDescriptions[$abbr]))
+        {
             $desc = $this->abbrDescriptions[$abbr];
-            if (empty($desc)) {
+            if(empty($desc))
+            {
                 return $this->hashPart("<abbr>$abbr</abbr>");
-            } else {
+            }
+            else
+            {
                 $desc = $this->encodeAttribute($desc);
                 return $this->hashPart("<abbr title=\"$desc\">$abbr</abbr>");
             }
-        } else {
+        }
+        else
+        {
             return $matches[0];
         }
     }

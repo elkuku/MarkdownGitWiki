@@ -16,7 +16,7 @@ class plgContentKISSKontent extends JPlugin
      */
     public function onContentPrepare($context, $row, &$params, $page = 0)
     {
-        if( ! $row->text)
+        if(! $row->text)
             return true;
 
         include_once __DIR__.'/parser/emarkdown.php';
@@ -36,5 +36,6 @@ class plgContentKISSKontent extends JPlugin
         $row->text = '<!-- jTextile -->'."\n".$textile->TextileThis($row->text);
 
         return true;
-    }//function
+    }
+    //function
 }//class

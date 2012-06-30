@@ -24,11 +24,10 @@ class MgwToolbarButton
         $html = array();
 
         $class = 'btn '.$this->attribs->get('class');
-        $href = $this->attribs->get('href') ?: 'javascript:void(0);';
-        $onclick = $this->attribs->get('onclick') ? 'onclick="'.$this->attribs->get('onclick').'"': '';
-        $icon = $this->attribs->get('icon') ?: '';
-        $text = $this->attribs->get('text') ?: '';
-
+        $href = $this->attribs->get('href') ? : 'javascript:void(0);';
+        $onclick = $this->attribs->get('onclick') ? 'onclick="'.$this->attribs->get('onclick').'"' : '';
+        $icon = $this->attribs->get('icon') ? : '';
+        $text = $this->attribs->get('text') ? : '';
 
         $html[] = '<a class="'.$class.'" href="'.$href.'"'.$onclick.'>';
 

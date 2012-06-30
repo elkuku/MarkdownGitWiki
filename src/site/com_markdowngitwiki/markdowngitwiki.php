@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') || die('=;)');
 /**
  * @package    MarkdownGitWiki
  * @subpackage Base
@@ -7,11 +7,8 @@
  * @license    GNU/GPL
  */
 
-//-- No direct access
-defined('_JEXEC') || die('=;)');
-
-//include __DIR__.'/helpers/makrdowngitwiki.php';
-
+try
+{
 $dataPath = JComponentHelper::getParams('com_markdowngitwiki')->get('dataPath');
 
 if('' === trim($dataPath))
@@ -28,9 +25,9 @@ if(false == JFolder::exists($dataPath))
     return;
 }
 
-JLoader::registerPrefix('Mgw', JPATH_COMPONENT_SITE.'/helpers');
-
 define('MGW_PATH_DATA', $dataPath);
+
+JLoader::registerPrefix('Mgw', JPATH_COMPONENT_SITE.'/helpers');
 
 //-- Import the class JController
 jimport('joomla.application.component.controller');
@@ -43,3 +40,10 @@ $controller->execute(JFactory::getApplication()->input->get('task'));
 
 //-- Redirect if set by the controller
 $controller->redirect();
+}
+catch(Exception $e)
+{
+    JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+
+    echo '<pre>'.$e->getTraceAsString().'</pre>';
+}
