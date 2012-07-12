@@ -34,18 +34,12 @@ class MarkdownGitWikiModelMarkdownGitWiki extends JModel
         $createPage = JFactory::getApplication()->input->getInt('create') ? true : false;
 
         $createLink = JRoute::_('&task=createPage&page='.$page);
-        //$createLinkStart = JRoute::_('&task=createPage&page='.$page.'/start');
-
-        $createButton = '<a class="btn btn-success" href="'.$createLink.'">'
-            .'<i class="icon-plus icon-white"></i>&nbsp;'
-            .'Create this page'
-            .'</a>';
 
         $createButton = new MgwToolbarButton(array(
             'class' => 'btn-success',
             'href' => $createLink,
             'icon' => 'icon-plus icon white',
-            'text' => 'Create this page',
+            'text' => 'Create this page',//@jgettext
         ));
 
         $fullPath = MGW_PATH_DATA.'/'.$page.'.md';
@@ -72,8 +66,6 @@ class MarkdownGitWikiModelMarkdownGitWiki extends JModel
             $html[] = '<h1>'.$page.'</h1>';
 
             $html[] = MgwFileTree::drawTree($folder, JRoute::_('&view=&page='.$page.'/[link]'));
-
-//            $html[] = '{{pageindex|'.$page.'}}';
 
             $this->createButton = $createButton;
 

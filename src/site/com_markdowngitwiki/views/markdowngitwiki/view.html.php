@@ -55,10 +55,6 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
         JDispatcher::getInstance()->trigger('onContentPrepare'
             , array('text', &$this->content, &$this->params));
 
-        // $id =($this->content->id_kiss) ?: $this->content->id;
-
-        // $this->translations = $this->getModel()->getTranslations($id);
-
         $this->setPathway();
 
         $this->setupToolbar();
@@ -71,12 +67,13 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
         if('' == $this->createButton)
         {
             MgwToolbarHelper::addButton(new MgwToolbarButton(array(
-                'onclick' => "alert('not yet...');",
+                'onclick' => "alert('Not yet...');",
                 'icon' => 'icon-pencil',
                 'text' => 'Edit'
             )), 'actions');
+
             MgwToolbarHelper::addButton(new MgwToolbarButton(array(
-                'onclick' => "alert('not yet...');",
+                'onclick' => "alert('Not yet...');",
                 'icon' => 'icon-trash',
                 'text' => 'Delete'
             )), 'actions');
@@ -85,7 +82,6 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
         {
             MgwToolbarHelper::addButton($this->createButton, 'actions');
         }
-
     }
 
     /**
@@ -179,5 +175,4 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JView
 
         return ($itemId == $activeId);
     }
-
 }

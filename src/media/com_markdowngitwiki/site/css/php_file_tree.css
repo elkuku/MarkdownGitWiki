@@ -6,18 +6,24 @@
 */
 
 .php-file-tree {
+    /*
     font-family: Georgia;
     font-size: 12px;
     letter-spacing: 1px;
     line-height: 1.5;
+    */
 }
 
-.php-file-tree A {
+.php-file-tree a {
     color: #000000;
     text-decoration: none;
+    display: block;
 }
 
-.php-file-tree A:hover {
+.php-file-tree a:focus {
+    outline: none;
+}
+.php-file-tree a:hover {
     color: #666666;
 }
 

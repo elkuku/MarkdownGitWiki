@@ -108,7 +108,7 @@ class MgwExtensionHelper
 
     private static function processTemplates($text)
     {
-        $pattern = "@{{([a-z]+)\|?([A-z0-9\|\.\s]+)}}@";
+        $pattern = "@{{([a-z]+)\|?([A-z0-9/\|\.\s]+)}}@";
 
         preg_match_all($pattern, $text, $matches);
 

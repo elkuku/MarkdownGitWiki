@@ -9,37 +9,37 @@
 
 try
 {
-$dataPath = JComponentHelper::getParams('com_markdowngitwiki')->get('dataPath');
+    $dataPath = JComponentHelper::getParams('com_markdowngitwiki')->get('dataPath');
 
-if('' === trim($dataPath))
-    $dataPath = JPath::clean(JPATH_COMPONENT_ADMINISTRATOR.'/pages');
+    if('' === trim($dataPath))
+        $dataPath = JPath::clean(JPATH_COMPONENT_ADMINISTRATOR.'/pages');
 
-$dataPath = realpath($dataPath);
+    $dataPath = realpath($dataPath);
 
-if(false == JFolder::exists($dataPath))
-{
-    $application = JFactory::getApplication();
-    $application->enqueueMessage('MarkdownGitWiki: The data path specified in the configuration settings does not exist.', 'error');
-    $application->enqueueMessage(sprintf('Please create the folder: %s', $dataPath), 'error');
+    if(false == JFolder::exists($dataPath))
+    {
+        $application = JFactory::getApplication();
+        $application->enqueueMessage('MarkdownGitWiki: The data path specified in the configuration settings does not exist.', 'error');
+        $application->enqueueMessage(sprintf('Please create the folder: %s', $dataPath), 'error');
 
-    return;
-}
+        return;
+    }
 
-define('MGW_PATH_DATA', $dataPath);
+    define('MGW_PATH_DATA', $dataPath);
 
-JLoader::registerPrefix('Mgw', JPATH_COMPONENT_SITE.'/helpers');
+    JLoader::registerPrefix('Mgw', JPATH_COMPONENT_SITE.'/helpers');
 
-//-- Import the class JController
-jimport('joomla.application.component.controller');
+    //-- Import the class JController
+    jimport('joomla.application.component.controller');
 
-//-- Get an instance of the controller with the prefix 'MarkdownGitWiki'
-$controller = JController::getInstance('MarkdownGitWiki');
+    //-- Get an instance of the controller with the prefix 'MarkdownGitWiki'
+    $controller = JController::getInstance('MarkdownGitWiki');
 
-//-- Execute the 'task' from the Request
-$controller->execute(JFactory::getApplication()->input->get('task'));
+    //-- Execute the 'task' from the Request
+    $controller->execute(JFactory::getApplication()->input->get('task'));
 
-//-- Redirect if set by the controller
-$controller->redirect();
+    //-- Redirect if set by the controller
+    $controller->redirect();
 }
 catch(Exception $e)
 {
