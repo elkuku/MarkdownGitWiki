@@ -18,7 +18,7 @@ jimport('joomla.application.component.view');
  *
  * @package MarkdownGitWiki
  */
-class MarkdownGitWikiViewMarkdownGitWiki extends JView
+class MarkdownGitWikiViewMarkdownGitWiki extends JViewLegacy
 {
     protected $content = null;
 

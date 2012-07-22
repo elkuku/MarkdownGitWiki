@@ -18,7 +18,7 @@ jimport('joomla.application.component.controller');
  * @package    MarkdownGitWiki
  * @subpackage Controllers
  */
-class MarkdownGitWikiController extends JController
+class MarkdownGitWikiController extends JControllerLegacy
 {
     public function createPage()
     {

@@ -15,7 +15,7 @@ jimport('joomla.application.component.view');
  * @package    MarkdownGitWiki
  * @subpackage Views
  */
-class MarkdownGitWikiViewGit extends JView
+class MarkdownGitWikiViewGit extends JViewLegacy
 {
     /**
      * MarkdownGitWikiList view display method.
