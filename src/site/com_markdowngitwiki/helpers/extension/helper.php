@@ -145,14 +145,12 @@ class MgwExtensionHelper
      */
     protected static function doInternalAnchorsCallback($matches)
     {
-        $whole_match = $matches[1];
-
         $text = trim($matches[2], '/');
 
         if(count($matches) > 3)
         {
             $url = $matches[3] == '' ? $matches[4] : $matches[3];
-            $title =& $matches[7];
+            $title = $matches[2];
         }
         else
         {
@@ -160,15 +158,13 @@ class MgwExtensionHelper
             $title = '';
         }
 
-        $url = self::encodeAttribute($url);
-
         $red = (self::isLink($url)) ? '' : ' redlink';
+
+        $redAdvise = ($red) ? 'Click to create this page...' : '';
 
         $attribs = 'class="internal'.$red.'"';
 
         $url = self::encodeAttribute(self::getLink($url));
-
-        $redAdvise = ($red) ? 'Click to create this page...' : '';
 
         $attribs .= ((isset($title) && $title) || $redAdvise)
             ? ' title="'.$redAdvise.$title.'"'
@@ -277,28 +273,38 @@ class MgwExtensionHelper
 
     public static function isLink($link)
     {
-        $page = JFactory::getApplication()->input->getVar('page');
+        if(0 == strpos($link, '/'))
+        {
+            $page = JFactory::getApplication()->input->getVar('page');
 
-        if('start' == $page)
-            $page = '';
+            if('start' == $page)
+                $page = '';
 
-        $path = JPath::clean(MGW_PATH_DATA.(($page) ? '/'.$page : '').'/'.$link.'.md');
+            $path = JPath::clean(MGW_PATH_DATA.(($page) ? '/'.$page : '').'/'.$link);
+        }
+        else
+        {
+            $path = JPath::clean(MGW_PATH_DATA.'/'.$link);
+        }
 
-        if(true == JFile::exists($path))
+        //-- Test if a file exist
+        if(true == JFile::exists($path.'.md'))
             return true;
 
-        $path = JPath::clean(MGW_PATH_DATA.(($page) ? '/'.$page : '').'/'.$link);
-
+        //-- Test if a folder exist
         return JFolder::exists($path);
     }
 
     public static function drawToolbar($class = 'pull-right')
     {
-        MgwToolbarHelper::addButton(new MgwToolbarButton(array(
-            'href' => JRoute::_('&view=pages'),
-            'icon' => 'icon-list-alt',
-            'text' => 'Page List'
-        )));
+        if('pages' != JFactory::getApplication()->input->get('view'))
+        {
+            MgwToolbarHelper::addButton(new MgwToolbarButton(array(
+                'href' => JRoute::_('&view=pages'),
+                'icon' => 'icon-list-alt',
+                'text' => 'Page List'
+            )));
+        }
 
         return MgwToolbarHelper::display($class);
     }
