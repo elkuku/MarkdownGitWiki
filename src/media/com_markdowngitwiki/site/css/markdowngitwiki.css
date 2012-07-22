@@ -7,3 +7,9 @@ a.external {
     background-image: url(../img/external_link.png);
     background-repeat: no-repeat;
 }
+
+div.console pre {
+    background-color: #000000;
+    color: white;
+    font-family: monospace;
+}
