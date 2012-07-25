@@ -301,7 +301,7 @@ class MgwExtensionHelper
         {
             MgwToolbarHelper::addButton(new MgwToolbarButton(array(
                 'href' => JRoute::_('&view=pages'),
-                'icon' => 'icon-list-alt',
+                'icon' => 'icon-drawer',
                 'text' => 'Page List'
             )));
         }

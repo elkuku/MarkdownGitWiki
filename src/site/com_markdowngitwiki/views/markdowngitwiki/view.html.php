@@ -74,7 +74,7 @@ class MarkdownGitWikiViewMarkdownGitWiki extends JViewLegacy
 
             MgwToolbarHelper::addButton(new MgwToolbarButton(array(
                 'onclick' => "alert('Not yet...');",
-                'icon' => 'icon-trash',
+                'icon' => 'icon-remove',
                 'text' => 'Delete'
             )), 'actions');
         }
