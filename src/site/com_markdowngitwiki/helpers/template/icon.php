@@ -7,38 +7,33 @@
 
 class MgwTemplateIcon extends MgwTemplate
 {
-	/**
-	 * Process the template.
-	 *
-	 * @abstract
-	 *
-	 * @param string $paramString
-	 *
-	 * @return string
-	 */
-	public function process($paramString)
-	{
-		// $imagePath = '___documentation/___images';
+    /**
+     * Process the template.
+     *
+     * @abstract
+     *
+     * @param string $paramString
+     *
+     * @return string
+     */
+    public function process($paramString)
+    {
+        $parts = explode('|', $paramString);
 
-		$parts = explode('|', $paramString);
+        $icon = (isset($parts[0])) ? $parts[0] : '__unknown__';
 
-		$icon = (isset($parts[0])) ? $parts[0] : '__unknown__';
+        $path = __DIR__.'/icon/icons/%s.png';
 
-		$path = __DIR__ . '/icon/icons/%s.png';
-//        $path = $imagePath.'/icons/'.$icon.'.png';
+        $p = realpath(sprintf($path, $icon));
 
-		$p = realpath(sprintf($path, $icon));
-		$p = ($p) ? : sprintf($path, '__unknown__');
+        $p = ($p) ? : realpath(sprintf(__DIR__.'/icon/icons/%s.ico', $icon));
 
-//        $data = JFile::read($path);
-		$data = JFile::read($p);
+        $p = ($p) ? : sprintf($path, '__unknown__');
 
-//        $cc = base64_encode($data);
-		$cc = base64_encode($data);
+        $data = JFile::read($p);
 
-		return '<img src="data:image/png;base64,' . $cc . '" />';
-		//           .'<img src="data:image/png;base64,'.$cc.'" />';
+        $cc = base64_encode($data);
 
-		//return '<img src="'.$path.'" alt="icon '.$icon.'"/>';
-	}
+        return '<img src="data:image/png;base64,'.$cc.'" />';
+    }
 }
